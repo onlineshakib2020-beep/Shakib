@@ -1,0 +1,336 @@
+{
+  "settings": {
+    "bhataName": "SBL মিষ্টি মাটির ইট (বাবুলিয়া, সাতক্ষীরা)",
+    "tagline": "ইটভাটার আধুনিক ডিজিটাল সেলস ও সার্বিক হিসাব ব্যবস্থাপনা",
+    "proprietorName": "মোঃ কামরুল ইসলাম সাহেব",
+    "phone1": "01913-678010",
+    "phone2": "01728-287018",
+    "address": "বাবুলিয়া, সাতক্ষীরা সদর, সাতক্ষীরা",
+    "openingBalance": 0,
+    "theme": "light",
+    "dailyGoals": {
+      "rawBricksCutTarget": 50000,
+      "bricksSoldTarget": 30000,
+      "cashCollectionTarget": 250000,
+      "unloadLinesTarget": 8
+    }
+  },
+  "brickGrades": [
+    {
+      "id": "grade-1",
+      "code": "BF-1",
+      "nameBn": "১ নং ইট",
+      "nameEn": "1 No Brick",
+      "ratePerUnit": 11000,
+      "ratePerThousand": true,
+      "currentStock": 40000,
+      "seasonProduced": 40000
+    },
+    {
+      "id": "grade-picket",
+      "code": "BF-PKT",
+      "nameBn": "পিকেট ইট",
+      "nameEn": "Picket Brick",
+      "ratePerUnit": 11000,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-1-5",
+      "code": "BF-1.5",
+      "nameBn": "১.৫ নং ইট",
+      "nameEn": "1.5 No Brick",
+      "ratePerUnit": 10500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-2",
+      "code": "BF-2",
+      "nameBn": "২ নং ইট",
+      "nameEn": "2 No Brick",
+      "ratePerUnit": 9500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-3",
+      "code": "BF-3",
+      "nameBn": "৩ নং ইট",
+      "nameEn": "3 No Brick",
+      "ratePerUnit": 8500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-goria",
+      "code": "BF-GOR",
+      "nameBn": "গড়িয়া ও ঝামা ইট",
+      "nameEn": "Goria Brick",
+      "ratePerUnit": 7500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-adla",
+      "code": "BF-ADL",
+      "nameBn": "আদলা ও ড্যামেজ ইট",
+      "nameEn": "Adla / Broken Brick",
+      "ratePerUnit": 6000,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    }
+  ],
+  "salesMemos": [],
+  "cashTransactions": [
+    {
+      "id": "tx-1793815096540",
+      "date": "2026-11-04",
+      "type": "OUT",
+      "category": "শ্রমিক ও সর্দার পেমেন্ট",
+      "amount": 5000,
+      "description": "মোঃ রফিকুল ইসলাম (ম্যানেজার) অল্প কিস্তি/হাত খরচ বেতন পরিশোধ: হাত খরচ / কিস্তি প্রদান",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-11-04T17:58:16.540Z"
+    },
+    {
+      "id": "tx-1793815080439",
+      "date": "2026-11-04",
+      "type": "OUT",
+      "category": "শ্রমিক ও সর্দার পেমেন্ট",
+      "amount": 5000,
+      "description": "মোঃ রফিকুল ইসলাম (ম্যানেজার) মাসিক বেতন প্রদান",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-11-04T17:58:00.439Z"
+    },
+    {
+      "id": "tx-1793811259129",
+      "date": "2026-11-04",
+      "type": "OUT",
+      "category": "শ্রমিক ও সর্দার পেমেন্ট",
+      "amount": 15000,
+      "description": "পোড়াই মিস্ত্রি সাপ্তাহিক পেমেন্ট (৮ জন মিস্ত্রি): আলী হোসেন সর্দার ও পোড়াই মিস্ত্রি দল",
+      "referenceId": "porai-1793811259129",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-11-04T16:54:19.130Z"
+    }
+  ],
+  "workerProfiles": [],
+  "workerAttendance": [],
+  "kilnNotes": [],
+  "millPots": [],
+  "chulliLoads": [
+    {
+      "id": "load-1793811251364",
+      "date": "2026-11-04",
+      "sardarName": "আসাদ ভ্যান / সেলিম সর্দার",
+      "rawBricksLoaded": 18000,
+      "vanCount": 180,
+      "ratePerVan": 115,
+      "totalBill": 2070,
+      "paidAmount": 0,
+      "dueAmount": 2070,
+      "note": "",
+      "createdAt": "2026-11-04T16:54:11.364Z"
+    }
+  ],
+  "poraiMistriRecords": [
+    {
+      "id": "porai-1793811259129",
+      "date": "2026-11-04",
+      "mistriName": "আলী হোসেন সর্দার ও পোড়াই মিস্ত্রি দল",
+      "chamberOrRound": "সিজন চুক্তি (মাসভিত্তিক বিল ও সাপ্তাহিক কিস্তি)",
+      "mistriCount": 8,
+      "monthsCount": 5,
+      "monthlyRatePerMistri": 18000,
+      "contractTotalBill": 720000,
+      "bricksFired": 0,
+      "ratePerThousand": 400,
+      "totalBill": 720000,
+      "paidAmount": 15000,
+      "dueAmount": 705000,
+      "note": "",
+      "createdAt": "2026-11-04T16:54:19.129Z"
+    }
+  ],
+  "chulliUnloads": [
+    {
+      "id": "unload-1793811261332",
+      "date": "2026-11-04",
+      "chamberOrRound": "রাউন্ড-০১",
+      "sardarName": "রহিম আনলোড সর্দার ও দল",
+      "linesUnloaded": 10,
+      "bricksPerLine": 4000,
+      "ratePerLine": 750,
+      "unloadedByGrade": [],
+      "totalBricksUnloaded": 40000,
+      "ratePerThousand": 187.5,
+      "totalBill": 7500,
+      "paidAmount": 0,
+      "dueAmount": 7500,
+      "note": "",
+      "createdAt": "2026-11-04T16:54:21.332Z"
+    }
+  ],
+  "woodFuelRecords": [],
+  "soilCoalRecords": [],
+  "dadonRecords": [],
+  "advanceBookings": [],
+  "vehicleDieselRecords": [],
+  "complianceRecords": [],
+  "productionPayments": [
+    {
+      "id": "ppay-1793811259129-ev9d",
+      "section": "PORAI_MISTRI",
+      "referenceId": "porai-1793811259129",
+      "recipientName": "আলী হোসেন সর্দার ও পোড়াই মিস্ত্রি দল (৮ জন মিস্ত্রি)",
+      "subDetail": "সিজন চুক্তি (মাসভিত্তিক বিল ও সাপ্তাহিক কিস্তি) · মোট বিল ৳৭,২০,০০০ · সাপ্তাহিক টাকা প্রদান",
+      "amount": 15000,
+      "date": "2026-11-04",
+      "note": "পোড়াই মিস্ত্রিকে সাপ্তাহিক টাকা প্রদান",
+      "cashTxId": "tx-1793811259129",
+      "createdAt": "2026-11-04T16:54:19.129Z"
+    }
+  ],
+  "memoDeliveries": [],
+  "kilnUnits": [
+    {
+      "id": "sbl-1",
+      "nameBn": "SBL মিষ্টি মাটির ইট — ভাটা-১ (বাবুলিয়া, সাতক্ষীরা)",
+      "nameEn": "SBL Sweet Clay Bricks — Kiln-1 (Babulia, Satkhira)",
+      "locationBn": "বাবুলিয়া, সাতক্ষীরা সদর, সাতক্ষীরা",
+      "active": true
+    },
+    {
+      "id": "sbl-2",
+      "nameBn": "SBL মিষ্টি মাটির ইট — ভাটা-২ (সাতক্ষীরা)",
+      "nameEn": "SBL Sweet Clay Bricks — Kiln-2 (Satkhira)",
+      "locationBn": "সাতক্ষীরা সদর, সাতক্ষীরা",
+      "active": true
+    }
+  ],
+  "kilnSeasons": [
+    {
+      "id": "season-2026-2027",
+      "nameBn": "সিজন ২০২৬–২০২৭ (চলমান ভাটা সিজন)",
+      "nameEn": "2026–2027 Season",
+      "startDate": "2026-10-01",
+      "endDate": "2027-06-30",
+      "kilnIds": [
+        "sbl-1",
+        "sbl-2"
+      ],
+      "status": "ACTIVE",
+      "damageOrAdjustmentBricks": 0,
+      "revisionHistory": [
+        {
+          "id": "rev-init-2026",
+          "timestamp": "2026-10-01T08:00:00.000Z",
+          "action": "CREATED",
+          "actorName": "মোঃ কামরুল ইসলাম সাহেব",
+          "reasonBn": "২০২৬–২০২৭ ভাটা সিজন প্রারম্ভিক কনফিগারেশন।"
+        }
+      ],
+      "createdAt": "2026-10-01T08:00:00.000Z"
+    },
+    {
+      "id": "season-2025-2026",
+      "nameBn": "সিজন ২০২৫–২০২৬ (পূর্ববর্তী ভাটা সিজন)",
+      "nameEn": "2025–2026 Season",
+      "startDate": "2025-10-01",
+      "endDate": "2026-06-30",
+      "kilnIds": [
+        "sbl-1"
+      ],
+      "status": "ACTIVE",
+      "damageOrAdjustmentBricks": 0,
+      "revisionHistory": [
+        {
+          "id": "rev-init-2025",
+          "timestamp": "2025-10-01T08:00:00.000Z",
+          "action": "CREATED",
+          "actorName": "মোঃ কামরুল ইসলাম সাহেব",
+          "reasonBn": "২০২৫–২০২৬ ভাটা সিজন রেকর্ড সংরক্ষণ।"
+        }
+      ],
+      "createdAt": "2025-10-01T08:00:00.000Z"
+    }
+  ],
+  "agentTasks": [],
+  "agentMessages": [
+    {
+      "id": "msg-welcome",
+      "role": "assistant",
+      "text": "আসসালামু আলাইকুম! BrickFlow — Bhata Management System প্রস্তুত। সকল হিসাব ০ (শূন্য) থেকে শুরু করা হয়েছে।",
+      "timestamp": "2026-11-04T08:00:00.000Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "audit-1793815096540-ab1u",
+      "timestamp": "2026-11-04T17:58:16.540Z",
+      "actor": "USER",
+      "action": "ADD_CASH_TX",
+      "detailsBn": "শ্রমিক ও সর্দার পেমেন্ট: ৳৫,০০০ (খরচ) যোগ।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1793815080439-it7e",
+      "timestamp": "2026-11-04T17:58:00.439Z",
+      "actor": "USER",
+      "action": "ADD_CASH_TX",
+      "detailsBn": "শ্রমিক ও সর্দার পেমেন্ট: ৳৫,০০০ (খরচ) যোগ।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1793811261332-rdbh",
+      "timestamp": "2026-11-04T16:54:21.332Z",
+      "actor": "USER",
+      "action": "CHULLI_UNLOAD",
+      "detailsBn": "চুল্লি থেকে ১০ লাইন (৪০,০০০ পিস) ইট আনলোড (@ ৳৭৫০/লাইন, মোট বিল ৳৭,৫০০)।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1793811259130-a0uj",
+      "timestamp": "2026-11-04T16:54:19.130Z",
+      "actor": "USER",
+      "action": "PORAI_MISTRI_ADD",
+      "detailsBn": "পোড়াই মিস্ত্রি (আলী হোসেন সর্দার ও পোড়াই মিস্ত্রি দল · ৮ জন মিস্ত্রি): মোট বিল ৳৭,২০,০০০, দেওয়া হলো ৳১৫,০০০",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1793811251365-p2nr",
+      "timestamp": "2026-11-04T16:54:11.365Z",
+      "actor": "USER",
+      "action": "CHULLI_VAN_LOAD",
+      "detailsBn": "চুল্লিতে ভ্যান লোড (আসাদ ভ্যান / সেলিম সর্দার): ১৮,০০০ পিস (@ ৳115/হাজার · ১০০০ পিস রেট) - বিল ৳২,০৭০",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1793784183611-o1ld",
+      "timestamp": "2026-11-04T09:23:03.611Z",
+      "actor": "USER",
+      "action": "RESET_ALL_DATA",
+      "detailsBn": "সম্পূর্ণ ডাটাবেস রিসেট করে সকল হিসাব ০ (শূন্য) করা হয়েছে।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1",
+      "timestamp": "2026-11-04T08:00:00.000Z",
+      "actor": "SYSTEM_QA",
+      "action": "SYSTEM_INIT",
+      "detailsBn": "BrickFlow ম্যানেজমেন্ট সিস্টেম সকল হিসাব ০ (শূন্য) করে প্রস্তুত করা হয়েছে।",
+      "status": "SUCCESS"
+    }
+  ],
+  "context": {}
+}

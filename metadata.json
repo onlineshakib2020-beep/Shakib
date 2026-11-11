@@ -1,0 +1,6 @@
+{
+  "name": "সৌদিয়া ট্রেডার্স (SBL ইট) — ভাটা ম্যানেজমেন্ট ও লাইভ AI এজেন্ট",
+  "description": "সৌদিয়া ট্রেডার্স (SBL মিষ্টি মাটির ইট — বাবুলিয়া, সাতক্ষীরা) ইটের ভাটা ম্যানেজমেন্ট সিস্টেম এবং রিয়েল-টাইম বাংলা ভয়েস ও অ্যাকশন-টেকিং AI এজেন্ট কন্ট্রোল সেন্টার।",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,745 @@
+{
+  "settings": {
+    "bhataName": "BrickFlow — Bhata Management System",
+    "tagline": "ইটভাটার আধুনিক ডিজিটাল সেলস ও সার্বিক হিসাব ব্যবস্থাপনা",
+    "proprietorName": "মোঃ কামরুল ইসলাম সাহেব",
+    "phone1": "০১৯১৩-৬৭৮০১০",
+    "phone2": "০১৭২৮-২৮৭০১৮",
+    "address": "বাবুলিয়া, সাতক্ষীরা সদর, সাতক্ষীরা",
+    "openingBalance": 75000,
+    "theme": "light"
+  },
+  "brickGrades": [
+    {
+      "id": "grade-1",
+      "code": "BF-1",
+      "nameBn": "১ নং ইট (First Class)",
+      "nameEn": "Grade 1 Brick",
+      "ratePerUnit": 13.5,
+      "ratePerThousand": false,
+      "currentStock": 145000,
+      "seasonProduced": 450000
+    },
+    {
+      "id": "grade-2",
+      "code": "BF-2",
+      "nameBn": "২ নং ইট (Standard)",
+      "nameEn": "Grade 2 Brick",
+      "ratePerUnit": 12,
+      "ratePerThousand": false,
+      "currentStock": 82000,
+      "seasonProduced": 220000
+    },
+    {
+      "id": "grade-3",
+      "code": "BF-3",
+      "nameBn": "৩ নং ইট (Common)",
+      "nameEn": "Grade 3 Brick",
+      "ratePerUnit": 10.5,
+      "ratePerThousand": false,
+      "currentStock": 65000,
+      "seasonProduced": 180000
+    },
+    {
+      "id": "grade-picket",
+      "code": "BF-PKT",
+      "nameBn": "পিকেট ইট (Picket)",
+      "nameEn": "Picket Brick",
+      "ratePerUnit": 12.8,
+      "ratePerThousand": false,
+      "currentStock": 54000,
+      "seasonProduced": 150000
+    },
+    {
+      "id": "grade-goria",
+      "code": "BF-GOR",
+      "nameBn": "গোরিয়া ও ঝামা ইট (Goria)",
+      "nameEn": "Goria Brick",
+      "ratePerUnit": 9.5,
+      "ratePerThousand": false,
+      "currentStock": 38000,
+      "seasonProduced": 95000
+    }
+  ],
+  "salesMemos": [
+    {
+      "id": "memo-1004",
+      "memoNo": "BF-2026-104",
+      "date": "2026-10-20",
+      "customerName": "আলহাজ্ব মোঃ আব্দুল মান্নান",
+      "customerPhone": "০১৭১২-৪৪৫৫৬৬",
+      "customerAddress": "সুলতানপুর, সাতক্ষীরা সদর",
+      "truckNo": "সাতক্ষীরা-ট-১১-০৪৫২",
+      "driverName": "মোঃ কবির হোসেন",
+      "items": [
+        {
+          "id": "it-104-1",
+          "gradeId": "grade-1",
+          "gradeName": "১ নং ইট (First Class)",
+          "quantity": 6000,
+          "rate": 13.5,
+          "ratePerThousand": false,
+          "lineTotal": 81000
+        }
+      ],
+      "subTotal": 81000,
+      "discount": 1000,
+      "totalAmount": 80000,
+      "paidAmount": 55000,
+      "dueAmount": 25000,
+      "paymentMethod": "নগদ ক্যাশ",
+      "status": "PARTIAL",
+      "note": "সুলতানপুর নতুন বাড়ির কাজের জন্য সরবরাহ",
+      "createdAt": "2026-10-20T08:40:00.000Z"
+    },
+    {
+      "id": "memo-1003",
+      "memoNo": "BF-2026-103",
+      "date": "2026-10-20",
+      "customerName": "ইঞ্জিনিয়ার তৌহিদুল ইসলাম",
+      "customerPhone": "০১৯১৫-৮৮৯৯০০",
+      "customerAddress": "বাবুলিয়া বাজার, সাতক্ষীরা",
+      "truckNo": "যশোর-ড-১১-৩৩২১",
+      "driverName": "আব্দুর রহিম",
+      "items": [
+        {
+          "id": "it-103-1",
+          "gradeId": "grade-2",
+          "gradeName": "২ নং ইট (Standard)",
+          "quantity": 3000,
+          "rate": 12,
+          "ratePerThousand": false,
+          "lineTotal": 36000
+        }
+      ],
+      "subTotal": 36000,
+      "discount": 0,
+      "totalAmount": 36000,
+      "paidAmount": 36000,
+      "dueAmount": 0,
+      "paymentMethod": "বিকাশ / নগদ অ্যাপ",
+      "status": "PAID",
+      "note": "সম্পূর্ণ পরিশোধিত",
+      "createdAt": "2026-10-20T09:15:00.000Z"
+    },
+    {
+      "id": "memo-1002",
+      "memoNo": "BF-2026-102",
+      "date": "2026-10-19",
+      "customerName": "মেসার্স রজনীগন্ধা বিল্ডার্স (রফিক সাহেব)",
+      "customerPhone": "০১৭১-২২৩৩৪৪",
+      "customerAddress": "কলারোয়া বাজার, সাতক্ষীরা",
+      "truckNo": "খুলনা-ট-১১-৭৮৯০",
+      "driverName": "মনিরুল ইসলাম",
+      "items": [
+        {
+          "id": "it-102-1",
+          "gradeId": "grade-1",
+          "gradeName": "১ নং ইট (First Class)",
+          "quantity": 8000,
+          "rate": 13.5,
+          "ratePerThousand": false,
+          "lineTotal": 108000
+        },
+        {
+          "id": "it-102-2",
+          "gradeId": "grade-picket",
+          "gradeName": "পিকেট ইট (Picket)",
+          "quantity": 2000,
+          "rate": 12.8,
+          "ratePerThousand": false,
+          "lineTotal": 25600
+        }
+      ],
+      "subTotal": 133600,
+      "discount": 1600,
+      "totalAmount": 132000,
+      "paidAmount": 100000,
+      "dueAmount": 32000,
+      "paymentMethod": "ব্যাংক চেক / ট্রান্সফার",
+      "status": "PARTIAL",
+      "note": "কলারোয়া সাইটে ডেলিভারি",
+      "createdAt": "2026-10-19T14:20:00.000Z"
+    },
+    {
+      "id": "memo-1025",
+      "memoNo": "BF-2026-125",
+      "date": "2026-10-20",
+      "customerName": "হাজী মোঃ আব্দুর রহিম",
+      "customerPhone": "০১৭১১-৮৮৯৯২২",
+      "customerAddress": "পাটকেলঘাটা, সাতক্ষীরা",
+      "truckNo": "সাতক্ষীরা-ট-১১-০১২৫",
+      "driverName": "রবিউল ইসলাম",
+      "items": [
+        {
+          "id": "it-125-1",
+          "gradeId": "grade-1",
+          "gradeName": "১ নং ইট (First Class)",
+          "quantity": 5000,
+          "rate": 13.5,
+          "ratePerThousand": false,
+          "lineTotal": 67500
+        }
+      ],
+      "subTotal": 67500,
+      "discount": 0,
+      "totalAmount": 67500,
+      "paidAmount": 42500,
+      "dueAmount": 25000,
+      "paymentMethod": "নগদ ক্যাশ",
+      "status": "PARTIAL",
+      "note": "পাটকেলঘাটা মার্কেট ভবনের কাজের ইট",
+      "createdAt": "2026-10-20T09:40:00.000Z"
+    },
+    {
+      "id": "memo-1001",
+      "memoNo": "BF-2026-101",
+      "date": "2026-10-19",
+      "customerName": "মোঃ শফিকুল আলম (ঠিকাদার)",
+      "customerPhone": "০১৮১৯-৫৫৬৬৭৭",
+      "customerAddress": "তালা উপজেলা, সাতক্ষীরা",
+      "truckNo": "সাতক্ষীরা-ড-১১-১১২২",
+      "driverName": "হাসান আলী",
+      "items": [
+        {
+          "id": "it-101-1",
+          "gradeId": "grade-2",
+          "gradeName": "২ নং ইট (Standard)",
+          "quantity": 5000,
+          "rate": 12,
+          "ratePerThousand": false,
+          "lineTotal": 60000
+        }
+      ],
+      "subTotal": 60000,
+      "discount": 0,
+      "totalAmount": 60000,
+      "paidAmount": 45000,
+      "dueAmount": 15000,
+      "paymentMethod": "নগদ ক্যাশ",
+      "status": "PARTIAL",
+      "note": "উপজেলা ড্রেন কাজের মাল",
+      "createdAt": "2026-10-19T11:10:00.000Z"
+    }
+  ],
+  "cashTransactions": [
+    {
+      "id": "tx-1792511616292",
+      "date": "2026-10-20",
+      "type": "OUT",
+      "category": "কয়লা ক্রয়",
+      "amount": 5000,
+      "description": "আজ পাঁচ হাজার টাকার কয়লার খরচ যোগ করো।",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-10-20T15:53:36.292Z"
+    },
+    {
+      "id": "tx-125",
+      "date": "2026-10-20",
+      "type": "IN",
+      "category": "ইট বিক্রয় আদায়",
+      "amount": 42500,
+      "description": "মেমো BF-2026-125 (হাজী মোঃ আব্দুর রহিম - ৫,০০০টি ১ নং ইট)",
+      "referenceId": "memo-1025",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-10-20T09:40:00.000Z"
+    },
+    {
+      "id": "tx-101",
+      "date": "2026-10-20",
+      "type": "IN",
+      "category": "ইট বিক্রয় আদায়",
+      "amount": 55000,
+      "description": "মেমো BF-2026-104 (আলহাজ্ব মোঃ আব্দুল মান্নান - ৬,০০০ ইট)",
+      "referenceId": "memo-1004",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-10-20T08:40:00.000Z"
+    },
+    {
+      "id": "tx-102",
+      "date": "2026-10-20",
+      "type": "IN",
+      "category": "ইট বিক্রয় আদায়",
+      "amount": 36000,
+      "description": "মেমো BF-2026-103 (ইঞ্জিনিয়ার তৌহিদুল ইসলাম - ৩,০০০ ইট)",
+      "referenceId": "memo-1003",
+      "paymentMethod": "বিকাশ / নগদ অ্যাপ",
+      "verified": true,
+      "createdAt": "2026-10-20T09:15:00.000Z"
+    },
+    {
+      "id": "tx-103",
+      "date": "2026-10-19",
+      "type": "IN",
+      "category": "ইট বিক্রয় আদায়",
+      "amount": 100000,
+      "description": "মেমো BF-2026-102 (মেসার্স রজনীগন্ধা বিল্ডার্স - ১০,০০০ ইট)",
+      "referenceId": "memo-1002",
+      "paymentMethod": "ব্যাংক চেক / ট্রান্সফার",
+      "verified": true,
+      "createdAt": "2026-10-19T14:20:00.000Z"
+    },
+    {
+      "id": "tx-104",
+      "date": "2026-10-19",
+      "type": "IN",
+      "category": "ইট বিক্রয় আদায়",
+      "amount": 45000,
+      "description": "মেমো BF-2026-101 (মোঃ শফিকুল আলম - ৫,০০০ ইট)",
+      "referenceId": "memo-1001",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-10-19T11:10:00.000Z"
+    },
+    {
+      "id": "tx-201",
+      "date": "2026-10-20",
+      "type": "OUT",
+      "category": "কয়লা ক্রয়",
+      "amount": 28000,
+      "description": "ইন্দোনেশিয়ান পাথর কয়লা ২ টন আনলোড ও পরিবহন খরচ",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-10-20T07:50:00.000Z"
+    },
+    {
+      "id": "tx-202",
+      "date": "2026-10-20",
+      "type": "OUT",
+      "category": "ভেকু ও ডিজেল",
+      "amount": 6500,
+      "description": "ভাটার ভেকু ও প্যাগলোডার মেশিনের জন্য ৬০ লিটার ডিজেল ক্রয়",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-10-20T08:15:00.000Z"
+    },
+    {
+      "id": "tx-203",
+      "date": "2026-10-20",
+      "type": "OUT",
+      "category": "শ্রমিক ও সর্দার পেমেন্ট",
+      "amount": 4250,
+      "description": "রহিম সর্দার ও শ্রমিক বাহিনীর সকাল-বিকাল হাজিরা ও খোরাকি পেমেন্ট",
+      "referenceId": "att-101",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-10-20T09:30:00.000Z"
+    },
+    {
+      "id": "tx-204",
+      "date": "2026-10-19",
+      "type": "OUT",
+      "category": "মাটি ক্রয়",
+      "amount": 18000,
+      "description": "ঘের থেকে মিষ্টি মাটি ১২ ট্রাক ক্রয়",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-10-19T15:00:00.000Z"
+    }
+  ],
+  "workerProfiles": [
+    {
+      "id": "w-1",
+      "name": "আব্দুর রহিম সর্দার",
+      "role": "সর্দার (Sardar)",
+      "phone": "০১৭১৪-৯০৮০৭০",
+      "morningRate": 250,
+      "afternoonRate": 250,
+      "active": true,
+      "totalPaidSeason": 48500
+    },
+    {
+      "id": "w-2",
+      "name": "মোঃ মিলন গাজী",
+      "role": "ভাটা লোড ও আনলোড (Loader)",
+      "phone": "০১৯২২-৩৩৪৪৫৫",
+      "morningRate": 125,
+      "afternoonRate": 125,
+      "active": true,
+      "totalPaidSeason": 19250
+    },
+    {
+      "id": "w-3",
+      "name": "আলী হোসেন (আগুন মিস্ত্রি)",
+      "role": "আগুন মিস্ত্রি (Fireman)",
+      "phone": "০১৭৩৩-৬৬৭৭৮৮",
+      "morningRate": 200,
+      "afternoonRate": 200,
+      "active": true,
+      "totalPaidSeason": 32400
+    },
+    {
+      "id": "w-4",
+      "name": "শহিদুল ইসলাম",
+      "role": "কাঁচা ইট কাটা (Moulder)",
+      "phone": "০১৮৪৪-১১২২৩৩",
+      "morningRate": 125,
+      "afternoonRate": 125,
+      "active": true,
+      "totalPaidSeason": 16800
+    },
+    {
+      "id": "w-5",
+      "name": "করিম বক্স (দিনমজুর)",
+      "role": "দিনমজুর (Daily Labour)",
+      "phone": "০১৯৫৫-৭৭৮৮৯৯",
+      "morningRate": 125,
+      "afternoonRate": 125,
+      "active": true,
+      "totalPaidSeason": 14500
+    }
+  ],
+  "workerAttendance": [
+    {
+      "id": "att-101",
+      "date": "2026-10-20",
+      "workerId": "w-1",
+      "workerName": "আব্দুর রহিম সর্দার",
+      "workerRole": "সর্দার (Sardar)",
+      "morningPresent": true,
+      "afternoonPresent": true,
+      "morningAmount": 250,
+      "afternoonAmount": 250,
+      "khorakiAmount": 500,
+      "hatbarAmount": 3000,
+      "totalPaid": 4000,
+      "note": "সকাল-বিকাল ডিউটি ও সাপ্তাহিক হাটবার পেমেন্ট",
+      "cashTxId": "tx-203",
+      "createdAt": "2026-10-20T09:25:00.000Z"
+    },
+    {
+      "id": "att-102",
+      "date": "2026-10-20",
+      "workerId": "w-2",
+      "workerName": "মোঃ মিলন গাজী",
+      "workerRole": "ভাটা লোড ও আনলোড (Loader)",
+      "morningPresent": true,
+      "afternoonPresent": true,
+      "morningAmount": 125,
+      "afternoonAmount": 125,
+      "khorakiAmount": 0,
+      "hatbarAmount": 0,
+      "totalPaid": 250,
+      "note": "সকাল (১২৫৳) + বিকাল (১২৫৳) হাজিরা",
+      "cashTxId": "tx-203",
+      "createdAt": "2026-10-20T09:30:00.000Z"
+    }
+  ],
+  "kilnNotes": [
+    {
+      "id": "note-1",
+      "date": "2026-10-20",
+      "title": "রহিম সর্দার দাদন পেমেন্ট",
+      "text": "আগামী শনিবার রহিম সর্দারকে কাঁচা ইট কাটার অগ্রিম বাবদ ২০,০০০ টাকা দিতে হবে।",
+      "priority": "URGENT",
+      "pinned": true,
+      "completed": false,
+      "createdAt": "2026-10-20T08:00:00.000Z"
+    },
+    {
+      "id": "note-2",
+      "date": "2026-10-20",
+      "title": "কয়লার গাড়ি ও ৩ নং চেম্বার",
+      "text": "৩ নং চেম্বারের আগুন পরিদর্শন ও নতুন ২ গাড়ি কয়লা অর্ডার কনফার্ম করতে হবে।",
+      "priority": "NORMAL",
+      "pinned": false,
+      "completed": false,
+      "createdAt": "2026-10-20T08:30:00.000Z"
+    }
+  ],
+  "agentTasks": [
+    {
+      "id": "task-ws-1792517805900",
+      "userRequest": "ক্যাশে কত টাকা আছে?",
+      "parsedIntent": "get_sales_summary",
+      "status": "COMPLETED",
+      "steps": [
+        {
+          "id": "s1-1792517805900",
+          "labelBn": "ভয়েস নির্দেশ ও কনটেক্সট যাচাই",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T17:36:45.900Z"
+        },
+        {
+          "id": "s2-1792517805900",
+          "labelBn": "ডাটাবেস অপারেশন যাচাই",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T17:36:45.900Z"
+        },
+        {
+          "id": "s3-1792517805900",
+          "labelBn": "ফলাফল ভেরিফিকেশন ও ভয়েস উত্তর",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T17:36:45.904Z"
+        }
+      ],
+      "toolCalls": [
+        {
+          "id": "tc-1792517805904-hnd5",
+          "toolName": "get_sales_summary",
+          "inputSummary": "dateScope: TODAY",
+          "outputSummary": "আজকের (2026-10-20) হিসাব: মোট ইট বিক্রি ৳১,৮৩,৫০০ (১৪,০০০টি ইট, ৩টি মেমো)। আজকের নগদ আদায় ৳১,৩৩,৫০০, আজকের খরচ ৳৪৩,৭৫০, বর্তমান ক্যাশ ব্যালেন্স ৳২,৯১,৭৫০, এবং মোট পাওনা ৳৯৭,০০০।",
+          "status": "COMPLETED",
+          "durationMs": 12,
+          "timestamp": "2026-10-20T17:36:45.904Z"
+        }
+      ],
+      "retryCount": 0,
+      "createdAt": "2026-10-20T17:36:45.900Z",
+      "completedAt": "2026-10-20T17:36:45.904Z",
+      "finalSummaryBn": "আজকের (2026-10-20) হিসাব: মোট ইট বিক্রি ৳১,৮৩,৫০০ (১৪,০০০টি ইট, ৩টি মেমো)। আজকের নগদ আদায় ৳১,৩৩,৫০০, আজকের খরচ ৳৪৩,৭৫০, বর্তমান ক্যাশ ব্যালেন্স ৳২,৯১,৭৫০, এবং মোট পাওনা ৳৯৭,০০০।",
+      "navigationTarget": "dashboard"
+    },
+    {
+      "id": "task-1792511612643",
+      "userRequest": "আজ পাঁচ হাজার টাকার কয়লার খরচ যোগ করো।",
+      "parsedIntent": "create_expense",
+      "status": "COMPLETED",
+      "steps": [
+        {
+          "id": "s1-1792511612643",
+          "labelBn": "বাংলা নির্দেশ ও কনটেক্সট যাচাই",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T15:53:36.294Z"
+        },
+        {
+          "id": "s2-1792511612643",
+          "labelBn": "ডাটাবেস অপারেশন যাচাই",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T15:53:36.294Z"
+        },
+        {
+          "id": "s3-1792511612643",
+          "labelBn": "ফলাফল ভেরিফিকেশন ও উত্তর প্রস্তুত",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T15:53:36.294Z"
+        }
+      ],
+      "toolCalls": [
+        {
+          "id": "tc-1792511612644-5dja",
+          "toolName": "create_expense",
+          "inputSummary": "কয়লা ক্রয়: ৳৫,০০০",
+          "outputSummary": "ক্যাশ খাতায় কয়লা ক্রয় বাবদ ৳৫,০০০ টাকা খরচ যুক্ত করতে চান। নিশ্চিত করতে \"হ্যাঁ\" বলুন বা নিচের কনফার্ম বাটনে ক্লিক করুন।",
+          "status": "AWAITING_CONFIRMATION",
+          "durationMs": 12,
+          "timestamp": "2026-10-20T15:53:32.644Z"
+        },
+        {
+          "id": "tc-1792511616294-dqp7",
+          "toolName": "create_expense",
+          "inputSummary": "কয়লা ক্রয়: ৳৫,০০০",
+          "outputSummary": "ক্যাশ খাতায় কয়লা ক্রয় বাবদ ৳৫,০০০ টাকা খরচ সফলভাবে যোগ করা হয়েছে। বর্তমান ক্যাশ ব্যালেন্স: ৳২,৯১,৭৫০।",
+          "status": "COMPLETED",
+          "durationMs": 12,
+          "timestamp": "2026-10-20T15:53:36.294Z"
+        }
+      ],
+      "retryCount": 0,
+      "createdAt": "2026-10-20T15:53:32.643Z",
+      "finalSummaryBn": "ক্যাশ খাতায় কয়লা ক্রয় বাবদ ৳৫,০০০ টাকা খরচ সফলভাবে যোগ করা হয়েছে। বর্তমান ক্যাশ ব্যালেন্স: ৳২,৯১,৭৫০।",
+      "completedAt": "2026-10-20T15:53:36.294Z"
+    },
+    {
+      "id": "task-1792511609744",
+      "userRequest": "মেমো ১২৫ খুঁজে বের করো।",
+      "parsedIntent": "search_memo",
+      "status": "COMPLETED",
+      "steps": [
+        {
+          "id": "s1-1792511609744",
+          "labelBn": "বাংলা নির্দেশ ও কনটেক্সট যাচাই",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T15:53:29.744Z"
+        },
+        {
+          "id": "s2-1792511609744",
+          "labelBn": "ডাটাবেস অপারেশন যাচাই",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T15:53:29.744Z"
+        },
+        {
+          "id": "s3-1792511609744",
+          "labelBn": "ফলাফল ভেরিফিকেশন ও উত্তর প্রস্তুত",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T15:53:29.745Z"
+        }
+      ],
+      "toolCalls": [
+        {
+          "id": "tc-1792511609745-8uga",
+          "toolName": "search_memo",
+          "inputSummary": "query: 125 (1টি মেমো)",
+          "outputSummary": "মেমো BF-2026-125 পাওয়া গেছে: ক্রেতা হাজী মোঃ আব্দুর রহিম, তারিখ 2026-10-20। মালামাল: ৫,০০০টি ১ নং ইট (First Class)। মোট বিল ৳৬৭,৫০০, নগদ জমা ৳৪২,৫০০ এবং বর্তমান বকেয়া পাওনা ৳২৫,০০০ (বকেয়া)।",
+          "status": "COMPLETED",
+          "durationMs": 12,
+          "timestamp": "2026-10-20T15:53:29.745Z"
+        }
+      ],
+      "retryCount": 0,
+      "createdAt": "2026-10-20T15:53:29.744Z",
+      "completedAt": "2026-10-20T15:53:29.745Z",
+      "finalSummaryBn": "মেমো BF-2026-125 পাওয়া গেছে: ক্রেতা হাজী মোঃ আব্দুর রহিম, তারিখ 2026-10-20। মালামাল: ৫,০০০টি ১ নং ইট (First Class)। মোট বিল ৳৬৭,৫০০, নগদ জমা ৳৪২,৫০০ এবং বর্তমান বকেয়া পাওনা ৳২৫,০০০ (বকেয়া)।",
+      "navigationTarget": "memos"
+    },
+    {
+      "id": "task-1792511607024",
+      "userRequest": "রহিমের নামে কত টাকা বাকি আছে?",
+      "parsedIntent": "get_customer_balance",
+      "status": "COMPLETED",
+      "steps": [
+        {
+          "id": "s1-1792511607024",
+          "labelBn": "বাংলা নির্দেশ ও কনটেক্সট যাচাই",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T15:53:27.024Z"
+        },
+        {
+          "id": "s2-1792511607024",
+          "labelBn": "ডাটাবেস অপারেশন যাচাই",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T15:53:27.024Z"
+        },
+        {
+          "id": "s3-1792511607024",
+          "labelBn": "ফলাফল ভেরিফিকেশন ও উত্তর প্রস্তুত",
+          "status": "COMPLETED",
+          "timestamp": "2026-10-20T15:53:27.029Z"
+        }
+      ],
+      "toolCalls": [
+        {
+          "id": "tc-1792511607029-0nf7",
+          "toolName": "get_customer_balance",
+          "inputSummary": "হাজী মোঃ আব্দুর রহিম: বকেয়া ৳২৫,০০০",
+          "outputSummary": "হাজী মোঃ আব্দুর রহিম-এর মোট ১টি মেমোতে সর্বমোট ক্রয় ৳৬৭,৫০০, নগদ জমা ৳৪২,৫০০, এবং বর্তমানে মোট বকেয়া পাওনা রয়েছে ৳২৫,০০০ টাকা। (১টি মেমোতে বকেয়া অবশিষ্ট আছে)।",
+          "status": "COMPLETED",
+          "durationMs": 12,
+          "timestamp": "2026-10-20T15:53:27.029Z"
+        }
+      ],
+      "retryCount": 0,
+      "createdAt": "2026-10-20T15:53:27.024Z",
+      "completedAt": "2026-10-20T15:53:27.029Z",
+      "finalSummaryBn": "হাজী মোঃ আব্দুর রহিম-এর মোট ১টি মেমোতে সর্বমোট ক্রয় ৳৬৭,৫০০, নগদ জমা ৳৪২,৫০০, এবং বর্তমানে মোট বকেয়া পাওনা রয়েছে ৳২৫,০০০ টাকা। (১টি মেমোতে বকেয়া অবশিষ্ট আছে)।",
+      "navigationTarget": "memos"
+    }
+  ],
+  "agentMessages": [
+    {
+      "id": "msg-welcome",
+      "role": "assistant",
+      "text": "আসসালামু আলাইকুম! BrickFlow — Bhata Management System-এর রিয়েল-টাইম AI সহকারী প্রস্তুত। আপনি মেমো তৈরি, আয়-ব্যয় হিসাব, বাকি আদায়, দিনমজুর হাজিরা বা স্টক জানতে চান এমন যেকোনো প্রশ্ন করতে পারেন।",
+      "timestamp": "2026-10-20T08:00:00.000Z"
+    },
+    {
+      "id": "msg-1792511607023-u",
+      "role": "user",
+      "text": "রহিমের নামে কত টাকা বাকি আছে?",
+      "timestamp": "2026-10-20T15:53:27.023Z",
+      "isVoice": true
+    },
+    {
+      "id": "msg-1792511607029-a",
+      "role": "assistant",
+      "text": "হাজী মোঃ আব্দুর রহিম-এর মোট ১টি মেমোতে সর্বমোট ক্রয় ৳৬৭,৫০০, নগদ জমা ৳৪২,৫০০, এবং বর্তমানে মোট বকেয়া পাওনা রয়েছে ৳২৫,০০০ টাকা। (১টি মেমোতে বকেয়া অবশিষ্ট আছে)।",
+      "timestamp": "2026-10-20T15:53:27.029Z",
+      "taskId": "task-1792511607024",
+      "toolName": "get_customer_balance"
+    },
+    {
+      "id": "msg-1792511609743-u",
+      "role": "user",
+      "text": "মেমো ১২৫ খুঁজে বের করো।",
+      "timestamp": "2026-10-20T15:53:29.743Z",
+      "isVoice": true
+    },
+    {
+      "id": "msg-1792511609745-a",
+      "role": "assistant",
+      "text": "মেমো BF-2026-125 পাওয়া গেছে: ক্রেতা হাজী মোঃ আব্দুর রহিম, তারিখ 2026-10-20। মালামাল: ৫,০০০টি ১ নং ইট (First Class)। মোট বিল ৳৬৭,৫০০, নগদ জমা ৳৪২,৫০০ এবং বর্তমান বকেয়া পাওনা ৳২৫,০০০ (বকেয়া)।",
+      "timestamp": "2026-10-20T15:53:29.745Z",
+      "taskId": "task-1792511609744",
+      "toolName": "search_memo"
+    },
+    {
+      "id": "msg-1792511612642-u",
+      "role": "user",
+      "text": "আজ পাঁচ হাজার টাকার কয়লার খরচ যোগ করো।",
+      "timestamp": "2026-10-20T15:53:32.642Z",
+      "isVoice": true
+    },
+    {
+      "id": "msg-1792511612644-a",
+      "role": "assistant",
+      "text": "ক্যাশ খাতায় কয়লা ক্রয় বাবদ ৳৫,০০০ টাকা খরচ যুক্ত করতে চান। নিশ্চিত করতে \"হ্যাঁ\" বলুন বা নিচের কনফার্ম বাটনে ক্লিক করুন।",
+      "timestamp": "2026-10-20T15:53:32.644Z",
+      "taskId": "task-1792511612643",
+      "toolName": "create_expense"
+    },
+    {
+      "id": "msg-1792511616294-c",
+      "role": "assistant",
+      "text": "ক্যাশ খাতায় কয়লা ক্রয় বাবদ ৳৫,০০০ টাকা খরচ সফলভাবে যোগ করা হয়েছে। বর্তমান ক্যাশ ব্যালেন্স: ৳২,৯১,৭৫০।",
+      "timestamp": "2026-10-20T15:53:36.294Z",
+      "taskId": "task-1792511612643"
+    },
+    {
+      "id": "msg-1792517805900-u",
+      "role": "user",
+      "text": "ক্যাশে কত টাকা আছে?",
+      "timestamp": "2026-10-20T17:36:45.900Z",
+      "isVoice": true
+    },
+    {
+      "id": "msg-1792517805904-a",
+      "role": "assistant",
+      "text": "আজকের (2026-10-20) হিসাব: মোট ইট বিক্রি ৳১,৮৩,৫০০ (১৪,০০০টি ইট, ৩টি মেমো)। আজকের নগদ আদায় ৳১,৩৩,৫০০, আজকের খরচ ৳৪৩,৭৫০, বর্তমান ক্যাশ ব্যালেন্স ৳২,৯১,৭৫০, এবং মোট পাওনা ৳৯৭,০০০।",
+      "timestamp": "2026-10-20T17:36:45.904Z",
+      "taskId": "task-ws-1792517805900",
+      "toolName": "get_sales_summary"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "audit-1792517707912-f7kf",
+      "timestamp": "2026-10-20T17:35:07.912Z",
+      "actor": "USER",
+      "action": "RESTORE_BACKUP",
+      "detailsBn": "ব্যাকআপ ফাইল থেকে ডাটাবেস রিস্টোর করা হয়েছে।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1792511616294-nmdk",
+      "timestamp": "2026-10-20T15:53:36.294Z",
+      "actor": "USER",
+      "action": "CONFIRM_FINANCIAL_ACTION",
+      "detailsBn": "ক্যাশ খাতায় কয়লা ক্রয় বাবদ ৳৫,০০০ টাকা খরচ সফলভাবে যোগ করা হয়েছে। বর্তমান ক্যাশ ব্যালেন্স: ৳২,৯১,৭৫০।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1792511616293-5dcp",
+      "timestamp": "2026-10-20T15:53:36.293Z",
+      "actor": "AI_AGENT",
+      "action": "ADD_CASH_TX",
+      "detailsBn": "কয়লা ক্রয় খাতে ৳৫,০০০ (খরচ) যোগ করা হয়েছে।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1",
+      "timestamp": "2026-10-20T08:00:00.000Z",
+      "actor": "SYSTEM_QA",
+      "action": "SYSTEM_INIT",
+      "detailsBn": "BrickFlow ম্যানেজমেন্ট সিস্টেম ডাটাবেস ও হিসাব রেডি।",
+      "status": "SUCCESS"
+    }
+  ],
+  "context": {
+    "lastReferencedCustomer": "হাজী মোঃ আব্দুর রহিম",
+    "lastReferencedMemoId": "memo-1025",
+    "lastReferencedMemoNo": "BF-2026-125"
+  }
+}

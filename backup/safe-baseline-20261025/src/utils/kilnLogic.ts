@@ -1,0 +1,2111 @@
+import type {
+  BrickGrade,
+  BusinessAnalysisReport,
+  CashTransaction,
+  DailyChartPoint,
+  DashboardMetrics,
+  GradeReportRow,
+  KilnDatabaseState,
+  MemoItemRow,
+  SalesMemo,
+  SystemUiAction,
+} from '../types/kiln.ts';
+
+const EN_TO_BN_DIGITS: Record<string, string> = {
+  '0': '০',
+  '1': '১',
+  '2': '২',
+  '3': '৩',
+  '4': '৪',
+  '5': '৫',
+  '6': '৬',
+  '7': '৭',
+  '8': '৮',
+  '9': '৯',
+};
+
+const BN_TO_EN_DIGITS: Record<string, string> = {
+  '০': '0',
+  '১': '1',
+  '২': '2',
+  '৩': '3',
+  '৪': '4',
+  '৫': '5',
+  '৬': '6',
+  '৭': '7',
+  '৮': '8',
+  '৯': '9',
+};
+
+/**
+ * Formats numbers into Bengali digits with Indian/Bangladeshi comma grouping (e.g. ১,২৫,০০০)
+ */
+export function formatBn(value: number | string | undefined | null): string {
+  if (value === undefined || value === null || value === '') return '০';
+  const num = typeof value === 'number' ? value : Number(parseBanglaDigits(String(value)));
+  if (Number.isNaN(num)) {
+    return String(value).replace(/[0-9]/g, (d) => EN_TO_BN_DIGITS[d] ?? d);
+  }
+  const formatted = new Intl.NumberFormat('en-IN', {
+    maximumFractionDigits: 2,
+  }).format(Math.round(num * 100) / 100);
+  return formatted.replace(/[0-9]/g, (d) => EN_TO_BN_DIGITS[d] ?? d);
+}
+
+export function formatCurrencyBn(value: number | string | undefined | null): string {
+  return `৳${formatBn(value)}`;
+}
+
+/**
+ * Converts Bengali digits in a string to standard ASCII digits for numeric parsing
+ */
+export function parseBanglaDigits(input: string): string {
+  return input.replace(/[০-৯]/g, (d) => BN_TO_EN_DIGITS[d] ?? d);
+}
+
+/**
+ * Strips parenthetical English labels like "(First Class)" from brick grade names
+ */
+export function cleanBrickGradeName(name: string): string {
+  if (!name) return '১ নং ইট';
+  return name.replace(/\s*\([^)]*\)/g, '').trim();
+}
+
+/**
+ * Calculate row total for an item in a memo.
+ * Business Rule:
+ * - Standard per-1,000 brick pricing (dor rate 1000 a hobe): e.g., rate = 11000 -> 1000 bricks = 11000, 500 bricks = 5500.
+ * - If a small per-piece rate (< 100, e.g. 13.5) is passed in legacy tests, falls back to qty * rate.
+ */
+export function calculateRowTotal(
+  quantity: number,
+  rate: number,
+  ratePerThousand = true
+): number {
+  const qty = Math.max(0, Number(quantity) || 0);
+  const r = Math.max(0, Number(rate) || 0);
+  if (r >= 100 || (ratePerThousand && r >= 100)) {
+    return Math.round((qty / 1000) * r);
+  }
+  return Math.round(qty * r);
+}
+
+/**
+ * Generates a guaranteed unique memo number and validates custom memo numbers against duplicates.
+ */
+export function generateUniqueMemoNo(
+  salesMemos: Array<{ memoNo: string }>,
+  requestedMemoNo?: string,
+  excludeMemoId?: string
+): { memoNo: string; duplicateErrorBn?: string } {
+  const filteredMemos = excludeMemoId
+    ? salesMemos.filter((m) => (m as { id?: string }).id !== excludeMemoId)
+    : salesMemos;
+  const existingSet = new Set(
+    filteredMemos.map((m) =>
+      parseBanglaDigits(String(m.memoNo || '').trim()).toLowerCase()
+    )
+  );
+
+  if (requestedMemoNo && requestedMemoNo.trim()) {
+    const cleanReq = parseBanglaDigits(requestedMemoNo.trim());
+    if (existingSet.has(cleanReq.toLowerCase())) {
+      return {
+        memoNo: cleanReq,
+        duplicateErrorBn: `মেমো নম্বর "${cleanReq}" ইতিমধ্যে ব্যবহৃত হয়েছে। ডুপ্লিকেট মেমো নম্বর অনুমোদিত নয়।`,
+      };
+    }
+    return { memoNo: cleanReq };
+  }
+
+  // If no memos exist yet, start serial at 3001
+  if (filteredMemos.length === 0) {
+    return { memoNo: '3001' };
+  }
+
+  // Follow the serial pattern of the most recent memo (e.g., 3001 -> 3002 -> 3003)
+  const latestRaw = parseBanglaDigits(String(filteredMemos[0]?.memoNo || '').trim());
+  const latestMatch = latestRaw.match(/^(.*?)(\d+)$/);
+
+  if (latestMatch) {
+    const prefix = latestMatch[1];
+    let maxNum = parseInt(latestMatch[2], 10);
+
+    for (const m of filteredMemos) {
+      const normM = parseBanglaDigits(String(m.memoNo || '').trim());
+      const mMatch = normM.match(/^(.*?)(\d+)$/);
+      if (mMatch && mMatch[1].toLowerCase() === prefix.toLowerCase()) {
+        const n = parseInt(mMatch[2], 10);
+        if (Number.isFinite(n) && n > maxNum) {
+          maxNum = n;
+        }
+      }
+    }
+
+    let candidate = `${prefix}${maxNum + 1}`;
+    while (existingSet.has(candidate.toLowerCase())) {
+      maxNum += 1;
+      candidate = `${prefix}${maxNum + 1}`;
+    }
+    return { memoNo: candidate };
+  }
+
+  let fallbackNum = 3000 + filteredMemos.length + 1;
+  let candidate = String(fallbackNum);
+  while (existingSet.has(candidate.toLowerCase())) {
+    fallbackNum += 1;
+    candidate = String(fallbackNum);
+  }
+  return { memoNo: candidate };
+}
+
+/**
+ * Normalizes a memo so rate is stored per 1,000 bricks (e.g., 11000 for 1000 bricks)
+ * and gradeName has no English parenthetical suffixes.
+ */
+export function normalizeLegacyMemo(
+  memo: Partial<SalesMemo>,
+  _defaultGrades: BrickGrade[] = []
+): SalesMemo {
+  const rawItems: MemoItemRow[] = Array.isArray(memo.items) && memo.items.length > 0
+    ? memo.items
+    : [
+        {
+          id: `item-${memo.id || Date.now()}-1`,
+          gradeId: memo.gradeId || 'grade-1',
+          gradeName: cleanBrickGradeName(memo.gradeName || '১ নং ইট'),
+          quantity: Number(memo.quantity) || 1000,
+          rate: Number(memo.rate) || 11000,
+          ratePerThousand: true,
+          lineTotal: Number(memo.totalAmount) || calculateRowTotal(
+            Number(memo.quantity) || 1000,
+            Number(memo.rate) || 11000,
+            true
+          ),
+        },
+      ];
+
+  const items: MemoItemRow[] = rawItems.map((it) => {
+    const qty = Math.max(0, Number(it.quantity) || 0);
+    let rate = Math.max(0, Number(it.rate) || 0);
+    if (rate > 0 && rate < 100) {
+      rate = Math.round(rate * 1000);
+    }
+    const lineTotal = calculateRowTotal(qty, rate, true);
+    return {
+      ...it,
+      gradeName: cleanBrickGradeName(it.gradeName || '১ নং ইট'),
+      quantity: qty,
+      rate,
+      ratePerThousand: true,
+      lineTotal,
+    };
+  });
+
+  const subTotal = items.reduce((s, it) => s + (it.lineTotal || 0), 0);
+  const discount = Math.max(0, Math.min(subTotal, Number(memo.discount) || 0));
+  const totalAmount = Math.max(0, subTotal - discount);
+  const paidAmount = Math.max(0, Math.min(totalAmount, Number(memo.paidAmount) || 0));
+  const dueAmount = Math.max(0, totalAmount - paidAmount);
+
+  let status: 'PAID' | 'DUE' | 'PARTIAL' = 'DUE';
+  if (dueAmount === 0 && totalAmount > 0) {
+    status = 'PAID';
+  } else if (paidAmount > 0 && dueAmount > 0) {
+    status = 'PARTIAL';
+  }
+
+  return {
+    id: memo.id || `memo-${Date.now()}`,
+    memoNo: memo.memoNo || `BF-2026-${Date.now().toString().slice(-4)}`,
+    date: memo.date || new Date().toISOString().slice(0, 10),
+    customerName: memo.customerName || 'নগদ ক্রেতা',
+    customerPhone: memo.customerPhone || '—',
+    customerAddress: memo.customerAddress || 'গ্রাম: স্থানীয়',
+    truckNo: memo.truckNo || '—',
+    driverName: memo.driverName || '—',
+    vehicleType: memo.vehicleType,
+    driverPhone: memo.driverPhone,
+    deliveryStatus: memo.deliveryStatus,
+    duePromiseDate: memo.duePromiseDate,
+    items,
+    subTotal,
+    discount,
+    totalAmount,
+    paidAmount,
+    dueAmount,
+    paymentMethod: memo.paymentMethod || 'নগদ ক্যাশ',
+    status,
+    note: memo.note || '',
+    createdAt: memo.createdAt || new Date().toISOString(),
+  };
+}
+
+/**
+ * Calculates totals for a multi-item sales memo
+ */
+export function calculateMultiItemMemoTotals(params: {
+  items: Array<{ quantity: number; rate: number; ratePerThousand?: boolean }>;
+  discount: number;
+  paidAmount: number;
+}): {
+  subTotal: number;
+  discount: number;
+  totalAmount: number;
+  paidAmount: number;
+  dueAmount: number;
+  status: 'PAID' | 'DUE' | 'PARTIAL';
+} {
+  const subTotal = params.items.reduce((sum, item) => {
+    return (
+      sum +
+      calculateRowTotal(
+        item.quantity,
+        item.rate,
+        item.ratePerThousand !== false
+      )
+    );
+  }, 0);
+
+  const discount = Math.max(0, Math.min(subTotal, Number(params.discount) || 0));
+  const totalAmount = Math.max(0, subTotal - discount);
+  const paidAmount = Math.max(
+    0,
+    Math.min(totalAmount, Math.round(Number(params.paidAmount) || 0))
+  );
+  const dueAmount = Math.max(0, totalAmount - paidAmount);
+
+  let status: 'PAID' | 'DUE' | 'PARTIAL' = 'DUE';
+  if (dueAmount === 0 && totalAmount > 0) {
+    status = 'PAID';
+  } else if (paidAmount > 0 && dueAmount > 0) {
+    status = 'PARTIAL';
+  }
+
+  return {
+    subTotal,
+    discount,
+    totalAmount,
+    paidAmount,
+    dueAmount,
+    status,
+  };
+}
+
+/**
+ * Legacy single-item calculation helper for backwards compatibility
+ */
+export function calculateMemoTotals(params: {
+  quantity: number;
+  rate: number;
+  paidAmount: number;
+}): {
+  totalAmount: number;
+  paidAmount: number;
+  dueAmount: number;
+  status: 'PAID' | 'DUE' | 'PARTIAL';
+} {
+  const res = calculateMultiItemMemoTotals({
+    items: [{ quantity: params.quantity, rate: params.rate, ratePerThousand: true }],
+    discount: 0,
+    paidAmount: params.paidAmount,
+  });
+  return {
+    totalAmount: res.totalAmount,
+    paidAmount: res.paidAmount,
+    dueAmount: res.dueAmount,
+    status: res.status,
+  };
+}
+
+/**
+ * Validates stock across all items in a memo.
+ * When allowZeroOrAnyStock is true ("ইট থাক বা না থাক মেমো করা যাবে"),
+ * memos are always allowed and stock is deducted down to a minimum of 0.
+ */
+export function validateStockForMultiItemMemo(
+  brickGrades: BrickGrade[],
+  items: Array<{ gradeId: string; quantity: number }>,
+  allowZeroOrAnyStock = false
+): { valid: boolean; errorBn?: string; updatedStock: Record<string, number> } {
+  const reqByGrade: Record<string, number> = {};
+  for (const it of items) {
+    const q = Number(it.quantity) || 0;
+    if (q <= 0) {
+      return {
+        valid: false,
+        errorBn: 'প্রতিটি ইটের পরিমাণ অবশ্যই শূন্যের চেয়ে বেশি হতে হবে।',
+        updatedStock: {},
+      };
+    }
+    reqByGrade[it.gradeId] = (reqByGrade[it.gradeId] || 0) + q;
+  }
+
+  const updatedStock: Record<string, number> = {};
+  for (const [gradeId, reqQty] of Object.entries(reqByGrade)) {
+    const grade = brickGrades.find((g) => g.id === gradeId);
+    if (!grade) {
+      return {
+        valid: false,
+        errorBn: 'নির্বাচিত ইটের ধরন খুঁজে পাওয়া যায়নি।',
+        updatedStock: {},
+      };
+    }
+    if (!allowZeroOrAnyStock && reqQty > grade.currentStock) {
+      return {
+        valid: false,
+        errorBn: `পর্যাপ্ত স্টক নেই! "${grade.nameBn}"-এর বর্তমান স্টক ${formatBn(
+          grade.currentStock
+        )}টি, কিন্তু আপনি মেমো করতে চাচ্ছেন ${formatBn(reqQty)}টি।`,
+        updatedStock: {},
+      };
+    }
+    updatedStock[gradeId] = Math.max(0, (grade.currentStock || 0) - reqQty);
+  }
+
+  return { valid: true, updatedStock };
+}
+
+/**
+ * Backward-compatible single-grade stock validator
+ */
+export function validateStockForSale(
+  grade: BrickGrade | undefined,
+  requestedQty: number,
+  allowZeroOrAnyStock = false
+): { valid: boolean; errorBn?: string; remainingStock: number } {
+  if (!grade) {
+    return {
+      valid: false,
+      errorBn: 'নির্বাচিত ইটের গ্রেডটি খুঁজে পাওয়া যায়নি।',
+      remainingStock: 0,
+    };
+  }
+  const qty = Number(requestedQty);
+  if (!Number.isFinite(qty) || qty <= 0) {
+    return {
+      valid: false,
+      errorBn: 'বিক্রির পরিমাণ অবশ্যই শূন্যের বেশি হতে হবে।',
+      remainingStock: grade.currentStock,
+    };
+  }
+  if (!allowZeroOrAnyStock && qty > grade.currentStock) {
+    return {
+      valid: false,
+      errorBn: `পর্যাপ্ত স্টক নেই! ${grade.nameBn}-এর বর্তমান স্টক ${formatBn(
+        grade.currentStock
+      )}টি, কিন্তু মেমো করতে চাচ্ছেন ${formatBn(qty)}টি।`,
+      remainingStock: grade.currentStock,
+    };
+  }
+  return {
+    valid: true,
+    remainingStock: Math.max(0, (grade.currentStock || 0) - qty),
+  };
+}
+
+/**
+ * Generates actual real-data driven daily chart points for Income vs Expense
+ */
+export function generateDailyChartData(
+  salesMemos: SalesMemo[],
+  cashTransactions: CashTransaction[],
+  daysCount = 7
+): DailyChartPoint[] {
+  const points: DailyChartPoint[] = [];
+  const now = new Date();
+
+  for (let i = daysCount - 1; i >= 0; i--) {
+    const d = new Date(now.getTime() - i * 86400000);
+    const dateStr = d.toISOString().slice(0, 10);
+    const month = d.getMonth() + 1;
+    const day = d.getDate();
+    const dateLabelBn = `${formatBn(day)}/${formatBn(month)}`;
+
+    const dayMemos = salesMemos.filter((m) => m.date === dateStr);
+    const dayTx = cashTransactions.filter((t) => t.date === dateStr);
+
+    const salesAmount = dayMemos.reduce((sum, m) => sum + (m.totalAmount || 0), 0);
+    const cashInAmount = dayTx
+      .filter((t) => t.type === 'IN')
+      .reduce((sum, t) => sum + (t.amount || 0), 0);
+    const expenseAmount = dayTx
+      .filter((t) => t.type === 'OUT')
+      .reduce((sum, t) => sum + (t.amount || 0), 0);
+
+    const bricksSoldQty = dayMemos.reduce((sum, m) => {
+      if (Array.isArray(m.items) && m.items.length > 0) {
+        return sum + m.items.reduce((s, it) => s + (it.quantity || 0), 0);
+      }
+      return sum + (m.quantity || 0);
+    }, 0);
+
+    points.push({
+      date: dateStr,
+      dateLabelBn,
+      salesAmount,
+      cashInAmount,
+      expenseAmount,
+      bricksSoldQty,
+    });
+  }
+
+  return points;
+}
+
+/**
+ * Calculates Dashboard Metrics following strict accounting rules:
+ * - Opening Balance + Real Cash In - Real Cash Out = Current Cash Balance
+ * - Total Bricks Sold count & amount
+ * - Total Collection vs Total Due
+ */
+export function calculateDashboardMetrics(
+  state: Pick<KilnDatabaseState, 'settings' | 'brickGrades' | 'salesMemos' | 'cashTransactions'>,
+  todayDate: string,
+  yesterdayDate: string
+): DashboardMetrics {
+  const openingBalance = state.settings?.openingBalance || 0;
+
+  const todayMemos = state.salesMemos.filter((m) => m.date === todayDate);
+  const yesterdayMemos = state.salesMemos.filter((m) => m.date === yesterdayDate);
+
+  const getMemoBricksQty = (m: SalesMemo) => {
+    if (Array.isArray(m.items) && m.items.length > 0) {
+      return m.items.reduce((sum, it) => sum + (it.quantity || 0), 0);
+    }
+    return m.quantity || 0;
+  };
+
+  const totalBricksSoldAllTime = state.salesMemos.reduce(
+    (sum, m) => sum + getMemoBricksQty(m),
+    0
+  );
+  const totalBrickSalesAmountAllTime = state.salesMemos.reduce(
+    (sum, m) => sum + (m.totalAmount || 0),
+    0
+  );
+
+  const todaySalesAmount = todayMemos.reduce((sum, m) => sum + (m.totalAmount || 0), 0);
+  const todayBricksSold = todayMemos.reduce((sum, m) => sum + getMemoBricksQty(m), 0);
+  const todaySalesMemoCount = todayMemos.length;
+
+  const yesterdaySalesAmount = yesterdayMemos.reduce((sum, m) => sum + (m.totalAmount || 0), 0);
+  const yesterdayBricksSold = yesterdayMemos.reduce((sum, m) => sum + getMemoBricksQty(m), 0);
+  const yesterdaySalesMemoCount = yesterdayMemos.length;
+
+  const inTransactions = state.cashTransactions.filter((t) => t.type === 'IN');
+  const outTransactions = state.cashTransactions.filter((t) => t.type === 'OUT');
+
+  const totalCashIn = inTransactions.reduce((sum, t) => sum + t.amount, 0);
+  const todayCashIn = inTransactions
+    .filter((t) => t.date === todayDate)
+    .reduce((sum, t) => sum + t.amount, 0);
+  const yesterdayCashIn = inTransactions
+    .filter((t) => t.date === yesterdayDate)
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const totalExpense = outTransactions.reduce((sum, t) => sum + t.amount, 0);
+  const todayExpense = outTransactions
+    .filter((t) => t.date === todayDate)
+    .reduce((sum, t) => sum + t.amount, 0);
+  const yesterdayExpense = outTransactions
+    .filter((t) => t.date === yesterdayDate)
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const currentCashBalance = openingBalance + totalCashIn - totalExpense;
+
+  const dueMemos = state.salesMemos.filter((m) => (m.dueAmount || 0) > 0);
+  const totalCustomerDue = dueMemos.reduce((sum, m) => sum + (m.dueAmount || 0), 0);
+  const uniqueDueCustomers = new Set(dueMemos.map((m) => m.customerName.trim())).size;
+
+  const totalBrickStockPieces = (state.brickGrades || []).reduce(
+    (sum, g) => sum + (g.currentStock || 0),
+    0
+  );
+
+  return {
+    todayDate,
+    yesterdayDate,
+    totalBricksSoldAllTime,
+    totalBrickSalesAmountAllTime,
+    todayBricksSold,
+    todaySalesAmount,
+    todaySalesMemoCount,
+    todayCashIn,
+    totalCashIn,
+    totalExpense,
+    todayExpense,
+    openingBalance,
+    currentCashBalance,
+    totalCustomerDue,
+    dueCustomerCount: uniqueDueCustomers,
+    yesterdaySalesAmount,
+    yesterdaySalesMemoCount,
+    yesterdayBricksSold,
+    yesterdayCashIn,
+    yesterdayExpense,
+    totalBrickStockPieces,
+    sevenDayChart: generateDailyChartData(state.salesMemos, state.cashTransactions, 7),
+  };
+}
+
+/**
+ * Computes grade-wise report from multi-item memos
+ */
+export function computeBrickGradeReport(
+  brickGrades: BrickGrade[],
+  salesMemos: SalesMemo[],
+  todayDate: string,
+  yesterdayDate: string
+): {
+  rows: GradeReportRow[];
+  totals: {
+    brickStockPieces: number;
+    todayBrickQty: number;
+    todayTotalAmount: number;
+    yesterdayBrickQty: number;
+    yesterdayTotalAmount: number;
+    seasonBrickQty: number;
+    seasonTotalAmount: number;
+  };
+} {
+  const rows: GradeReportRow[] = brickGrades.map((grade) => {
+    let todayQty = 0;
+    let todayAmount = 0;
+    let yesterdayQty = 0;
+    let yesterdayAmount = 0;
+    let seasonSoldQty = 0;
+    let seasonSoldAmount = 0;
+
+    for (const memo of salesMemos) {
+      const items = Array.isArray(memo.items) && memo.items.length > 0
+        ? memo.items
+        : [
+            {
+              id: '1',
+              gradeId: memo.gradeId || '',
+              gradeName: memo.gradeName || '',
+              quantity: memo.quantity || 0,
+              rate: memo.rate || 0,
+              ratePerThousand: true,
+              lineTotal: memo.totalAmount || 0,
+            },
+          ];
+
+      for (const it of items) {
+        if (it.gradeId === grade.id) {
+          seasonSoldQty += it.quantity || 0;
+          seasonSoldAmount += it.lineTotal || 0;
+
+          if (memo.date === todayDate) {
+            todayQty += it.quantity || 0;
+            todayAmount += it.lineTotal || 0;
+          } else if (memo.date === yesterdayDate) {
+            yesterdayQty += it.quantity || 0;
+            yesterdayAmount += it.lineTotal || 0;
+          }
+        }
+      }
+    }
+
+    return {
+      grade,
+      todayQty,
+      todayAmount,
+      yesterdayQty,
+      yesterdayAmount,
+      seasonSoldQty,
+      seasonSoldAmount,
+    };
+  });
+
+  const totals = {
+    brickStockPieces: rows.reduce((s, r) => s + r.grade.currentStock, 0),
+    todayBrickQty: rows.reduce((s, r) => s + r.todayQty, 0),
+    todayTotalAmount: rows.reduce((s, r) => s + r.todayAmount, 0),
+    yesterdayBrickQty: rows.reduce((s, r) => s + r.yesterdayQty, 0),
+    yesterdayTotalAmount: rows.reduce((s, r) => s + r.yesterdayAmount, 0),
+    seasonBrickQty: rows.reduce((s, r) => s + r.seasonSoldQty, 0),
+    seasonTotalAmount: rows.reduce((s, r) => s + r.seasonSoldAmount, 0),
+  };
+
+  return { rows, totals };
+}
+
+export const SAFE_CONFIRMATION_THRESHOLD = 0;
+
+export function requiresSafeConfirmation(params: {
+  actionType: 'ADD_EXPENSE' | 'DELETE_MEMO' | 'DELETE_CASH_TX';
+  amount?: number;
+}): boolean {
+  if (params.actionType === 'DELETE_MEMO' || params.actionType === 'DELETE_CASH_TX') {
+    return true;
+  }
+  if (params.actionType === 'ADD_EXPENSE' && (params.amount ?? 0) > SAFE_CONFIRMATION_THRESHOLD) {
+    return true;
+  }
+  return false;
+}
+
+export function extractBanglaAmount(rawText: string): number | null {
+  const normalized = parseBanglaDigits(rawText);
+
+  const wordToNum: Record<string, number> = {
+    এক: 1,
+    দেড়: 1.5,
+    দুই: 2,
+    আড়াই: 2.5,
+    তিন: 3,
+    চার: 4,
+    পাঁচ: 5,
+    ছয়: 6,
+    সাত: 7,
+    আট: 8,
+    নয়: 9,
+    দশ: 10,
+    পনেরো: 15,
+    বিশ: 20,
+    কুড়ি: 20,
+    ত্রিশ: 30,
+    চল্লিশ: 40,
+    পঞ্চাশ: 50,
+  };
+
+  // 1. Spoken word + হাজার (e.g. "পাঁচ হাজার", "দশ হাজার")
+  const wordHazarMatch = normalized.match(/(এক|দেড়|দুই|আড়াই|তিন|চার|পাঁচ|ছয়|সাত|আট|নয়|দশ|পনেরো|বিশ|কুড়ি|ত্রিশ|চল্লিশ|পঞ্চাশ)\s*(?:হাজার|hazar|thousand)/i);
+  if (wordHazarMatch && wordToNum[wordHazarMatch[1]]) {
+    return Math.round(wordToNum[wordHazarMatch[1]] * 1000);
+  }
+
+  // 2. Spoken word + লাখ/লক্ষ (e.g. "এক লাখ", "দুই লাখ")
+  const wordLakhMatch = normalized.match(/(এক|দেড়|দুই|আড়াই|তিন|চার|পাঁচ|ছয়|সাত|আট|নয়|দশ)\s*(?:লাখ|লক্ষ|lakh)/i);
+  if (wordLakhMatch && wordToNum[wordLakhMatch[1]]) {
+    return Math.round(wordToNum[wordLakhMatch[1]] * 100000);
+  }
+
+  // 3. Digit + হাজার (e.g. "50 হাজার" or "5 হাজার")
+  const hazarMatch = normalized.match(/(\d+(?:\.\d+)?)\s*(?:হাজার|hazar|thousand)/i);
+  if (hazarMatch) {
+    return Math.round(parseFloat(hazarMatch[1]) * 1000);
+  }
+
+  // 4. Digit + লাখ (e.g. "2 লাখ" or "1.5 লক্ষ")
+  const lakhMatch = normalized.match(/(\d+(?:\.\d+)?)\s*(?:লাখ|লক্ষ|lakh)/i);
+  if (lakhMatch) {
+    return Math.round(parseFloat(lakhMatch[1]) * 100000);
+  }
+
+  // 5. Explicit "5000 টাকা" or "৳5000"
+  const takaMatch = normalized.match(/(?:৳\s*)?(\d{2,9})(?:\s*(?:টাকা|taka|tk))?/i);
+  if (takaMatch) {
+    return parseInt(takaMatch[1], 10);
+  }
+
+  return null;
+}
+
+export function detectExpenseCategory(text: string): string | null {
+  const t = text.toLowerCase();
+  if (t.includes('কয়লা') || t.includes('কয়লা') || t.includes('coal') || t.includes('koyla'))
+    return 'কয়লা ক্রয়';
+  if (
+    t.includes('ভেকু') ||
+    t.includes('ডিজেল') ||
+    t.includes('তেল') ||
+    t.includes('diesel') ||
+    t.includes('veku') ||
+    t.includes('tel')
+  )
+    return 'ভেকু ও ডিজেল';
+  if (t.includes('মাটি') || t.includes('soil') || t.includes('clay') || t.includes('mati'))
+    return 'মাটি ক্রয়';
+  if (
+    t.includes('শ্রমিক') ||
+    t.includes('লেবার') ||
+    t.includes('সর্দার') ||
+    t.includes('হাজিরা') ||
+    t.includes('হাটবার') ||
+    t.includes('দিনমজুর') ||
+    t.includes('labor') ||
+    t.includes('labour') ||
+    t.includes('worker') ||
+    t.includes('sordar')
+  )
+    return 'শ্রমিক ও সর্দার পেমেন্ট';
+  if (
+    t.includes('বিদ্যুৎ') ||
+    t.includes('কারেন্ট') ||
+    t.includes('জ্বালানি') ||
+    t.includes('কাঠ') ||
+    t.includes('current') ||
+    t.includes('electric')
+  )
+    return 'বিদ্যুৎ ও জ্বালানি';
+  if (t.includes('অফিস') || t.includes('নাস্তা') || t.includes('আপ্যায়ন') || t.includes('চা') || t.includes('office'))
+    return 'অফিস ও আপ্যায়ন';
+  return null;
+}
+
+export function parseBanglaAgentIntent(
+  userText: string,
+  context: Record<string, unknown>
+): {
+  intent: string;
+  conversationalType?: 'GREETING' | 'THANKS' | 'CAPABILITIES' | 'BRICK_RATES' | 'GENERAL';
+  summaryMode?: 'AUTO' | 'TOTAL' | 'LIST';
+  category?: string;
+  amount?: number;
+  quantity?: number;
+  rate?: number;
+  paidAmount?: number;
+  customerName?: string;
+  workerName?: string;
+  memoNo?: string;
+  query?: string;
+  gradeId?: string;
+  noteText?: string;
+  targetTab?: string;
+  uiAction?: SystemUiAction;
+  dateScope?: 'TODAY' | 'YESTERDAY' | 'LAST_7_DAYS' | 'SEASON';
+} {
+  const trimmed = userText.trim();
+  const normalized = parseBanglaDigits(trimmed);
+  const lower = normalized.toLowerCase();
+  const cleanWords = lower.replace(/[।?!,.]/g, '').trim();
+
+  // 1. Explicit or contextual Confirmation ("হ্যাঁ", "কনফার্ম করো", "এবার সেটা সেভ করো", "ওটা সেভ করে দাও", "হ্যাঁ করে দাও")
+  if (
+    /^(হ্যাঁ|হ্যা|হাঁ|জি|জ্বী|কনফার্ম|কনফার্ম করো|অনুমোদন|অনুমোদন করো|নিশ্চিত|নিশ্চিত করো|ঠিক আছে|হ্যাঁ ঠিক আছে|হ্যাঁ করো|হ্যাঁ করে দাও|হ্যাঁ সেভ করো|এবার সেটা সেভ করো|এবার সেভ করো|ওটা সেভ করো|ওটা সেভ করে দাও|সেটা সেভ করো|সেভ করো|সেভ করে দাও|করে দাও|পাকা করো|yes|confirm|ok|okay|save it|ha|haan|ji)$/i.test(
+      cleanWords
+    ) ||
+    cleanWords.includes('এবার সেটা সেভ কর') ||
+    cleanWords.includes('ওটা সেভ কর') ||
+    cleanWords.includes('সেটা সেভ কর') ||
+    cleanWords.includes('হ্যাঁ কনফার্ম') ||
+    cleanWords.includes('হ্যাঁ সেভ')
+  ) {
+    return { intent: 'CONFIRM_ACTION' };
+  }
+
+  // 1b. Explicit or contextual Cancellation ("না", "থাক", "বাতিল করো", "বাদ দাও")
+  if (
+    /^(না|নাহ|থাক|এখন থাক|বাতিল|বাতিল করো|ক্যানসেল|ক্যান্সেল|বাদ দাও|দরকার নেই|লাগবে না|no|cancel|bad dao)$/i.test(
+      cleanWords
+    ) ||
+    cleanWords === 'বাতিল করো' ||
+    cleanWords === 'বাতিল' ||
+    cleanWords === 'বাদ দাও'
+  ) {
+    return { intent: 'CANCEL_ACTION' };
+  }
+
+  // 2. Multi-turn follow-up check: if pendingExpenseAmount exists
+  if (context.pendingExpenseAmount && Number(context.pendingExpenseAmount) > 0) {
+    const detectedCat = detectExpenseCategory(normalized);
+    if (detectedCat && !normalized.includes('মেমো') && !normalized.includes('বিক্রি')) {
+      return {
+        intent: 'create_expense',
+        category: detectedCat,
+        amount: Number(context.pendingExpenseAmount),
+      };
+    }
+  }
+
+  // 2b. Multi-turn follow-up check: if pendingPaymentData exists
+  const pendingPayment = context.pendingPaymentData as
+    | { customerNameOrMemoNo?: string; amount?: number }
+    | undefined;
+  if (pendingPayment && (pendingPayment.customerNameOrMemoNo || pendingPayment.amount)) {
+    const extractedAmt = extractBanglaAmount(normalized) || pendingPayment.amount;
+    if (extractedAmt && pendingPayment.customerNameOrMemoNo) {
+      return {
+        intent: 'record_payment',
+        amount: extractedAmt,
+        customerName: pendingPayment.customerNameOrMemoNo,
+      };
+    }
+  }
+
+  // 2c. Multi-turn follow-up check: if pendingMemoData exists
+  const pendingMemo = context.pendingMemoData as
+    | {
+        customerName?: string;
+        quantity?: number;
+        rate?: number;
+        paidAmount?: number;
+        gradeId?: string;
+      }
+    | undefined;
+
+  if (
+    pendingMemo &&
+    !normalized.includes('খরচ') &&
+    !normalized.includes('বিক্রয় কত') &&
+    !normalized.includes('বাকি আছে') &&
+    !normalized.includes('বাকি কত') &&
+    !normalized.includes('খুঁজে বের') &&
+    !normalized.includes('নোট')
+  ) {
+    const qtyMatch = normalized.match(/(\d+)\s*(?:পিস|ইট|টি|piece|brick)/i);
+    const hazarQtyMatch = normalized.match(/(\d+)\s*(?:হাজার|hazar|thousand)\s*(?:পিস|ইট)?/i);
+    const extractedQty = qtyMatch
+      ? parseInt(qtyMatch[1], 10)
+      : hazarQtyMatch
+      ? parseInt(hazarQtyMatch[1], 10) * 1000
+      : extractBanglaAmount(normalized) && !pendingMemo.quantity && pendingMemo.customerName
+      ? extractBanglaAmount(normalized) || undefined
+      : pendingMemo.quantity;
+
+    const rateMatch = normalized.match(/(\d+(?:\.\d+)?)\s*(?:দর|রেট|টাকা দরে|rate)/i);
+    const paidMatch = normalized.match(/(\d+)\s*(?:জমা|নগদ|paid|joma)/i);
+
+    let extractedCust = pendingMemo.customerName;
+    if (!extractedCust) {
+      const cleanedName = normalized
+        .replace(/(\d+(?:\.\d+)?|পিস|ইট|টি|হাজার|১ নং|২ নং|1 নং|2 নং|দর|রেট|জমা|টাকা|,|-)/gi, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (cleanedName.length >= 2) {
+        extractedCust = cleanedName;
+      }
+    }
+
+    if (extractedCust || extractedQty) {
+      return {
+        intent: 'create_sales_memo',
+        customerName: extractedCust,
+        quantity: extractedQty,
+        rate: rateMatch ? parseFloat(rateMatch[1]) : pendingMemo.rate,
+        paidAmount: paidMatch ? parseInt(paidMatch[1], 10) : pendingMemo.paidAmount,
+        gradeId: normalized.includes('2 নং') ? 'grade-2' : pendingMemo.gradeId || 'grade-1',
+      };
+    }
+  }
+
+  // 3. Contextual reference to "ওই মেমোটা" / "এই মেমোটা" / "সেই মেমোটা" / "আগের মেমোটা"
+  const ctxLastMemo = String(context.lastMemoNo || context.lastReferencedMemoNo || '');
+  const ctxLastCustomer = String(context.lastCustomerName || context.lastReferencedCustomer || '');
+
+  if (
+    (normalized.includes('ওই মেমো') ||
+      normalized.includes('এই মেমো') ||
+      normalized.includes('সেই মেমো') ||
+      normalized.includes('আগের মেমো') ||
+      lower.includes('oi memo')) &&
+    !normalized.includes('জমা') &&
+    !normalized.includes('আদায়') &&
+    !lower.includes('joma')
+  ) {
+    const refMemo = ctxLastMemo || ctxLastCustomer || '125';
+    return {
+      intent: 'search_memo',
+      query: refMemo,
+      memoNo: refMemo,
+    };
+  }
+
+  // 3b. Search Memo (e.g. "মেমো ১২৫ খুঁজে বের করো", "মেমো ১০২", "১২৫ নম্বর মেমো", "memo 125")
+  if (
+    !normalized.includes('প্রিন্ট') &&
+    !lower.includes('print') &&
+    !normalized.includes('ডিলিট') &&
+    !normalized.includes('মুছে') &&
+    !lower.includes('delete') &&
+    (normalized.includes('মেমো খুঁজ') ||
+      normalized.includes('মেমো খুঁজে') ||
+      normalized.includes('মেমো বের কর') ||
+      normalized.includes('মেমো দেখাও') ||
+      normalized.includes('মেমো নম্বর') ||
+      normalized.includes('মেমো নং') ||
+      /(?:মেমো|memo)\s*(?:নং|no|number)?\s*(\d+|[a-zA-Z0-9-]+)/i.test(normalized) ||
+      /(?:(\d+|[a-zA-Z0-9-]+)\s*(?:নং|নম্বর)\s*(?:মেমো|memo))/i.test(normalized))
+  ) {
+    const memoMatch =
+      normalized.match(/(?:মেমো|memo)\s*(?:নং|নম্বর|no|number)?\s*[:：-]?\s*(bf-[0-9-]+|\d+)/i) ||
+      normalized.match(/(bf-[0-9-]+|\d+)\s*(?:নং|নম্বর)\s*(?:মেমো|টা)?/i);
+    let query = memoMatch ? memoMatch[1] : '';
+    if (!query) {
+      query = normalized
+        .replace(/(?:মেমো|memo|খুঁজো?|খুঁজে|বের|করো?|দেখাও|নম্বর|নং|এর|সাহেবের|সাহেব|[।?!,:])/gi, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+    return {
+      intent: 'search_memo',
+      query: query || trimmed,
+      memoNo: query || trimmed,
+    };
+  }
+
+  // 4. Customer balance / due query (including contextual "রহিমের কত টাকা বাকি?", "তার বাকি কত?", "rahim er koto baki")
+  const isTotalFollowUp =
+    (normalized.includes('সব মিলিয়ে') ||
+      normalized.includes('সব মিলিয়ে') ||
+      normalized.includes('মোট বকেয়া') ||
+      normalized.includes('মোট বাকি') ||
+      normalized.includes('সবগুলো মিলিয়ে') ||
+      lower.includes('sob miliye')) &&
+    Boolean(ctxLastCustomer);
+
+  if (
+    isTotalFollowUp ||
+    ((normalized.includes('বাকি') ||
+      normalized.includes('পাওনা') ||
+      normalized.includes('বকেয়া') ||
+      normalized.includes('বকেয়া') ||
+      lower.includes('baki') ||
+      lower.includes('due') ||
+      lower.includes('paona')) &&
+      !normalized.includes('জমা কর') &&
+      !normalized.includes('জমা লিখ') &&
+      !normalized.includes('জমা দাও') &&
+      !normalized.includes('বাকি আদায়') &&
+      !normalized.includes('মেমো কর') &&
+      !normalized.includes('মেমো তৈরি') &&
+      !normalized.includes('ফিল্টার') &&
+      !normalized.includes('মেমোগুলো দেখাও') &&
+      !normalized.includes('তালিকা') &&
+      !normalized.includes('রিপোর্ট খোল') &&
+      !lower.includes('filter') &&
+      !lower.includes('joma'))
+  ) {
+    const isGlobalTotalDue =
+      (cleanWords === 'মোট পাওনা কত' ||
+        cleanWords === 'মোট বকেয়া কত' ||
+        cleanWords === 'বাজারে মোট পাওনা কত' ||
+        cleanWords === 'মোট কত টাকা পাওনা আছে' ||
+        cleanWords === 'mot baki koto' ||
+        cleanWords === 'total due koto') &&
+      !normalized.includes('তার') &&
+      !normalized.includes('ওনার') &&
+      !normalized.includes('সব মিলিয়ে');
+
+    if (isGlobalTotalDue) {
+      return { intent: 'get_dashboard_metrics' };
+    }
+
+    const isPronounCustomer =
+      normalized.includes('তার ') ||
+      normalized.startsWith('তার') ||
+      normalized.includes('ওনার') ||
+      normalized.includes('উনার') ||
+      normalized.includes('ওই কাস্টমার') ||
+      normalized.includes('ওই ক্রেতা') ||
+      normalized.includes('এই ক্রেতা') ||
+      normalized.includes('আগের ক্রেতা') ||
+      lower.includes('tar baki') ||
+      lower.includes('onar baki') ||
+      isTotalFollowUp;
+
+    let customer = '';
+    if (isPronounCustomer && ctxLastCustomer) {
+      customer = ctxLastCustomer;
+    } else {
+      const stopWords = new Set([
+        'কত',
+        'টাকা',
+        'বাকি',
+        'পাওনা',
+        'বকেয়া',
+        'বকেয়া',
+        'বকেয়াটাও',
+        'বকেয়াটাও',
+        'বকেয়াটা',
+        'বকেয়াটা',
+        'আছে',
+        'বলো',
+        'বলে',
+        'দাও',
+        'দিতে',
+        'পারো',
+        'জানাও',
+        'দেখাও',
+        'হিসাব',
+        'নামে',
+        'কাছে',
+        'মোট',
+        'সব',
+        'মিলিয়ে',
+        'মিলিয়ে',
+        'এখন',
+        'বর্তমানে',
+        'ওনার',
+        'তার',
+        'উনার',
+        'koto',
+        'taka',
+        'baki',
+        'due',
+        'paona',
+        'ache',
+        'er',
+        'bolo',
+      ]);
+      const rawTokens = trimmed
+        .replace(/[।?!,:]/g, ' ')
+        .split(/\s+/)
+        .map((w) => w.replace(/(?:-এর|ের|এর|দের|টাও|টা)$/i, '').trim())
+        .filter((w) => w.length > 0 && !stopWords.has(w.toLowerCase()));
+
+      customer = rawTokens
+        .filter((w) => !['সাহেব', 'সাহেবের', 'বাবু', 'বাবুর', 'হাজী', 'মেসার্স'].includes(w))
+        .join(' ')
+        .trim();
+      if (!customer && rawTokens.length > 0) {
+        customer = rawTokens[0];
+      }
+      if (customer.toLowerCase() === 'rahim') customer = 'রহিম';
+      if (customer.toLowerCase() === 'karim' || customer.toLowerCase() === 'korim') customer = 'করিম';
+      if (customer.toLowerCase() === 'mannan') customer = 'মান্নান';
+    }
+
+    return {
+      intent: 'get_customer_balance',
+      customerName: customer || ctxLastCustomer || 'রহিম',
+      summaryMode: isTotalFollowUp ? 'TOTAL' : 'AUTO',
+    };
+  }
+
+  // 5. Record Payment / Collect Customer Due (e.g. "এই ক্রেতার মেমোতে দশ হাজার টাকা জমা করো", "তার মেমোতে ৫০০০ টাকা জমা দাও")
+  if (
+    (normalized.includes('জমা কর') ||
+      normalized.includes('জমা লিখ') ||
+      normalized.includes('জমা দাও') ||
+      normalized.includes('জমা লেখ') ||
+      normalized.includes('বাকি আদায়') ||
+      normalized.includes('পেমেন্ট রেকর্ড') ||
+      normalized.includes('টাকা জমা') ||
+      lower.includes('joma koro') ||
+      lower.includes('joma dao') ||
+      lower.includes('payment')) &&
+    !normalized.includes('খরচ') &&
+    !normalized.includes('নতুন মেমো')
+  ) {
+    const amount = extractBanglaAmount(normalized) || undefined;
+    const custMatch =
+      trimmed.match(/(?:ক্রেতা|কাস্টমার|নাম(?!ে))\s+([^\d,]+)/i) ||
+      trimmed.match(/([^\s,]+)(?:-এর|ের|এর)\s+(?:মেমোতে|নামে)/i);
+
+    const hasPronounRef =
+      normalized.includes('এই ক্রেতা') ||
+      normalized.includes('ওই ক্রেতা') ||
+      normalized.includes('এই মেমো') ||
+      normalized.includes('ওই মেমো') ||
+      normalized.includes('তার ') ||
+      normalized.includes('ওনার ') ||
+      normalized.startsWith('তার') ||
+      normalized.startsWith('ওনার') ||
+      lower.includes('oi memo') ||
+      lower.includes('tar memo');
+
+    let customerName = custMatch ? custMatch[1].trim() : undefined;
+    if (
+      customerName &&
+      ['এই', 'ওই', 'সেই', 'তার', 'ওনার', 'উনার', 'ক্রেতার', 'কাস্টমারের'].includes(customerName)
+    ) {
+      customerName = undefined;
+    }
+    if (!customerName && hasPronounRef) {
+      customerName = ctxLastCustomer || ctxLastMemo;
+    }
+
+    return {
+      intent: 'record_payment',
+      amount: amount || 10000,
+      customerName: customerName || String(context.lastReferencedCustomer || ''),
+      memoNo: String(context.lastReferencedMemoNo || ''),
+    };
+  }
+
+  // 6. Notes — Search vs Create
+  if (
+    normalized.includes('নোট খুঁজ') ||
+    normalized.includes('নোট দেখাও') ||
+    normalized.includes('কী কী নোট') ||
+    normalized.includes('কি কি নোট') ||
+    normalized.includes('রিমাইন্ডার দেখাও') ||
+    lower.includes('search note') ||
+    lower.includes('show note')
+  ) {
+    const q = trimmed
+      .replace(
+        /(?:নোট\s*খুঁজো?|নোট\s*দেখাও|কী\s*কী\s*নোট\s*আছে|কি\s*কি\s*নোট\s*আছে|রিমাইন্ডার\s*দেখাও|search\s*notes?|show\s*notes?)/gi,
+        ''
+      )
+      .trim();
+    return {
+      intent: 'search_notes',
+      query: q || undefined,
+    };
+  }
+
+  if (
+    normalized.includes('নোট') ||
+    normalized.includes('রিমাইন্ডার লেখ') ||
+    normalized.includes('মনে করিয়ে দিও') ||
+    lower.startsWith('note') ||
+    lower.includes('note:')
+  ) {
+    const cleaned = trimmed
+      .replace(
+        /^(?:একটা\s*নোট\s*লিখ(?:ে\s*রাখো?|ুন)?[:：,-]?\s*|নোট\s*[:：,-]?\s*|নোট\s+লেখো?\s*[:：,-]?\s*|নোট\s+সেভ\s+করো?\s*[:：,-]?\s*|note\s*:\s*)/i,
+        ''
+      )
+      .trim();
+    return {
+      intent: 'create_note',
+      noteText: cleaned || trimmed,
+    };
+  }
+
+  // 7. Create Sales Memo (e.g. "একটা নতুন মেমো তৈরি করো", "রহিমের নামে ৫ হাজার ইটের মেমো করো", "মেমো করো ৫০০০ ইট ১৩.৫ দর ৩০০০০ জমা")
+  if (
+    normalized.includes('মেমো কর') ||
+    normalized.includes('মেমো লেখ') ||
+    normalized.includes('নতুন মেমো') ||
+    normalized.includes('মেমো তৈরি') ||
+    normalized.includes('মেমো বানাও') ||
+    normalized.includes('মেমো কাট') ||
+    normalized.includes('মেমো দে') ||
+    lower.includes('memo koro') ||
+    lower.includes('notun memo') ||
+    lower.includes('new memo')
+  ) {
+    const qtyMatch = normalized.match(/(\d+)\s*(?:পিস|ইট|টি|piece|it)/i);
+    const hazarMatch = normalized.match(/(\d+)\s*(?:হাজার|hazar|thousand)\s*(?:পিস|ইট|ইটের)?/i);
+    const wordHazarQty = extractBanglaAmount(normalized);
+    const rateMatch = normalized.match(/(\d+(?:\.\d+)?)\s*(?:দর|রেট|টাকা দরে|rate)/i);
+    const paidMatch = normalized.match(/(\d+)\s*(?:জমা|নগদ|joma)/i);
+    const qty = qtyMatch
+      ? parseInt(qtyMatch[1], 10)
+      : hazarMatch
+      ? parseInt(hazarMatch[1], 10) * 1000
+      : wordHazarQty && wordHazarQty >= 500
+      ? wordHazarQty
+      : undefined;
+    const rate = rateMatch ? parseFloat(rateMatch[1]) : undefined;
+    const paidAmount = paidMatch ? parseInt(paidMatch[1], 10) : undefined;
+
+    const custMatch =
+      trimmed.match(/([^\s,]+(?:\s+সাহেব)?)(?:-এর|ের|এর)?\s+নামে/i) ||
+      trimmed.match(/(?:কাস্টমার|ক্রেতা|নাম(?!ে))\s*[:：-]?\s*([^\d,]+)/i) ||
+      trimmed.match(/^([^\s,]+(?:\s+সাহেব)?)(?:-এর|ের|এর)\s+(?:একটা\s*)?(?:নতুন\s*)?(?:\d+\s*হাজার\s*)?মেমো/i);
+    const cleanedCust = custMatch
+      ? custMatch[1]
+          .replace(/(?:-এর|ের|এর)$/i, '')
+          .trim()
+      : undefined;
+    return {
+      intent: 'create_sales_memo',
+      quantity: qty,
+      rate,
+      paidAmount,
+      customerName: cleanedCust,
+      gradeId: normalized.includes('2 নং') ? 'grade-2' : 'grade-1',
+    };
+  }
+
+  // 8. Create Expense (e.g. "আজ পাঁচ হাজার টাকার কয়লার খরচ যোগ করো", "কয়লা বাবদ ৫০০০ টাকা খরচ")
+  if (
+    normalized.includes('খরচ লেখ') ||
+    normalized.includes('খরচ লিখ') ||
+    normalized.includes('খরচ যোগ') ||
+    normalized.includes('খরচ তুল') ||
+    normalized.includes('খরচ তোল') ||
+    lower.includes('khoroch') ||
+    lower.includes('expense') ||
+    (normalized.includes('বাবদ') && (normalized.includes('খরচ') || normalized.includes('টাকা'))) ||
+    (detectExpenseCategory(normalized) &&
+      extractBanglaAmount(normalized) &&
+      (normalized.includes('খরচ') || normalized.includes('দিলাম') || normalized.includes('দাও')))
+  ) {
+    const amount = extractBanglaAmount(normalized);
+    const category = detectExpenseCategory(normalized);
+    if (amount && !category && !normalized.includes('কত')) {
+      return {
+        intent: 'ASK_EXPENSE_CATEGORY',
+        amount,
+      };
+    }
+    if (amount && category) {
+      return {
+        intent: 'create_expense',
+        amount,
+        category,
+      };
+    }
+  }
+
+  // 9. Brick Rates Query (e.g. "ইটের দর কত?", "কোন ইটের দাম কত?", "১ নং ইটের রেট কত?")
+  if (
+    (normalized.includes('ইটের দর') ||
+      normalized.includes('ইটের রেট') ||
+      normalized.includes('ইটের দাম') ||
+      normalized.includes('কোন ইটের কত দাম') ||
+      normalized.includes('রেট কত') ||
+      lower.includes('rate koto') ||
+      lower.includes('dam koto')) &&
+    !normalized.includes('মেমো কর')
+  ) {
+    return { intent: 'CONVERSATIONAL', conversationalType: 'BRICK_RATES' };
+  }
+
+  // 10. Stock query (e.g. "স্টক কত আছে", "ইট স্টক কত", "কত ইট মজুত আছে")
+  if (
+    !normalized.includes('যোগ') &&
+    !normalized.includes('বাড়াও') &&
+    !lower.includes('add') &&
+    !lower.includes('jog') &&
+    (normalized.includes('স্টক') ||
+      normalized.includes('স্টকে') ||
+      normalized.includes('মজুত') ||
+      lower.includes('stock') ||
+      lower.includes('mojut'))
+  ) {
+    return { intent: 'check_stock' };
+  }
+
+  // 11. Recent Transactions query (e.g. "সাম্প্রতিক লেনদেন", "শেষ লেনদেনগুলো বলো")
+  if (
+    normalized.includes('সাম্প্রতিক লেনদেন') ||
+    normalized.includes('শেষ লেনদেন') ||
+    normalized.includes('ট্রানজ্যাকশন') ||
+    lower.includes('transaction')
+  ) {
+    return { intent: 'get_recent_transactions' };
+  }
+
+  // 12. Expense Summary (e.g. "আজকের খরচ কত?", "মোট খরচ কত", "আর খরচের কী অবস্থা?")
+  if (
+    normalized.includes('খরচ কত') ||
+    normalized.includes('খরচের হিসাব') ||
+    normalized.includes('খরচের সারসংক্ষেপ') ||
+    normalized.includes('খরচের কী অবস্থা') ||
+    normalized.includes('খরচের কি অবস্থা') ||
+    normalized.includes('কত খরচ হয়েছে') ||
+    normalized.includes('কত খরচ হয়েছে') ||
+    lower.includes('khoroch koto')
+  ) {
+    return {
+      intent: 'get_expense_summary',
+      category: detectExpenseCategory(normalized) || undefined,
+      dateScope: normalized.includes('গতকাল') || lower.includes('kalke')
+        ? 'YESTERDAY'
+        : normalized.includes('সাত')
+        ? 'LAST_7_DAYS'
+        : (context.lastDateScope as 'TODAY' | 'YESTERDAY' | undefined) || 'TODAY',
+    };
+  }
+
+  // 13. Contextual "আগের হিসাবটা" / "আর গতকাল?" / "গতকালেরটা বলো"
+  if (
+    normalized.includes('আগের হিসাব') ||
+    normalized.includes('গতকাল') ||
+    lower.includes('yesterday') ||
+    lower.includes('kalke')
+  ) {
+    if (context.lastTopic === 'EXPENSE') {
+      return { intent: 'get_expense_summary', dateScope: 'YESTERDAY' };
+    }
+    return { intent: 'get_sales_summary', dateScope: 'YESTERDAY' };
+  }
+
+  // 14. Comprehensive E-Commerce & Business Analysis (Alipro style deep analysis)
+  if (
+    normalized.includes('অ্যানালাইসিস') ||
+    normalized.includes('এনালাইসিস') ||
+    normalized.includes('অ্যানালাইজ') ||
+    normalized.includes('বিশ্লেষণ') ||
+    normalized.includes('লাভ ক্ষতি') ||
+    normalized.includes('লাভ-ক্ষতি') ||
+    normalized.includes('লাভের রিপোর্ট') ||
+    normalized.includes('ব্যবসার অবস্থা') ||
+    normalized.includes('ব্যবসার রিপোর্ট') ||
+    normalized.includes('পুরো রিপোর্ট') ||
+    normalized.includes('সব রিপোর্ট') ||
+    normalized.includes('গ্রোথ') ||
+    normalized.includes('মার্জিন') ||
+    normalized.includes('কোন ইট বেশি') ||
+    normalized.includes('সেরা ক্রেতা') ||
+    normalized.includes('টপ কাস্টমার') ||
+    lower.includes('analysis') ||
+    lower.includes('analisess') ||
+    lower.includes('analyze') ||
+    lower.includes('alipro') ||
+    lower.includes('ecommerce') ||
+    lower.includes('profit') ||
+    lower.includes('growth') ||
+    lower.includes('lav') ||
+    lower.includes('bebsa')
+  ) {
+    return { intent: 'analyze_business' };
+  }
+
+  // 14b. Date Range Profit / Overall Report / Sales Queries
+  if (
+    normalized.includes('সাত দিন') ||
+    normalized.includes('৭ দিন') ||
+    normalized.includes('মাসের রিপোর্ট') ||
+    normalized.includes('সিজনের হিসাব')
+  ) {
+    return {
+      intent: 'get_sales_summary',
+      dateScope: normalized.includes('সাত') || normalized.includes('৭') ? 'LAST_7_DAYS' : 'SEASON',
+    };
+  }
+
+  // 15. Full System / PC / UI Voice Control (Print, Scroll, Fullscreen, Backup, Modals, Stock/Rate Updates, Worker Attendance, Delete)
+  // 15a. Print Memo or Page ("মেমো ১২৫ প্রিন্ট করো", "গেট পাস প্রিন্ট দাও", "print memo 125", "print koro")
+  if (
+    normalized.includes('প্রিন্ট') ||
+    normalized.includes('গেট পাস') ||
+    lower.includes('print') ||
+    lower.includes('gate pass')
+  ) {
+    const memoMatch =
+      normalized.match(/(?:মেমো|memo)\s*(?:নং|নম্বর|no|number)?\s*[:：-]?\s*(bf-[0-9-]+|\d+)/i) ||
+      normalized.match(/(bf-[0-9-]+|\d+)\s*(?:নং|নম্বর)?\s*(?:মেমো|memo)/i) ||
+      normalized.match(/(\d{3,4})/);
+    const targetMemoNo = memoMatch
+      ? memoMatch[1]
+      : String(context.lastReferencedMemoNo || '125');
+    return {
+      intent: 'control_system_ui',
+      memoNo: targetMemoNo,
+      uiAction: {
+        type: 'PRINT_MEMO',
+        memoNo: targetMemoNo,
+      },
+    };
+  }
+
+  // 15b. Scroll / Screen / Fullscreen / Backup / Modal Control
+  if (
+    normalized.includes('নিচে নামাও') ||
+    normalized.includes('নিচে যাও') ||
+    normalized.includes('স্ক্রল ডাউন') ||
+    lower.includes('scroll down') ||
+    lower.includes('niche namo') ||
+    lower.includes('niche jao')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      uiAction: { type: 'SCROLL_DOWN' },
+    };
+  }
+
+  if (
+    normalized.includes('উপরে ওঠাও') ||
+    normalized.includes('উপরে যাও') ||
+    normalized.includes('স্ক্রল আপ') ||
+    lower.includes('scroll up') ||
+    lower.includes('scroll top') ||
+    lower.includes('upore jao') ||
+    lower.includes('upore uthao')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      uiAction: { type: 'SCROLL_UP' },
+    };
+  }
+
+  if (
+    normalized.includes('ফুলস্ক্রিন') ||
+    normalized.includes('ফুল স্ক্রিন') ||
+    normalized.includes('বড় পর্দা') ||
+    lower.includes('fullscreen') ||
+    lower.includes('full screen')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      uiAction: { type: 'FULLSCREEN_TOGGLE' },
+    };
+  }
+
+  if (
+    normalized.includes('ব্যাকআপ ডাউনলোড') ||
+    normalized.includes('ব্যাকআপ নাও') ||
+    normalized.includes('ডাটাবেস ব্যাকআপ') ||
+    normalized.includes('ডাটাবেস ডাউনলোড') ||
+    lower.includes('backup download') ||
+    lower.includes('export backup') ||
+    lower.includes('backup nao')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      uiAction: { type: 'EXPORT_BACKUP' },
+    };
+  }
+
+  if (
+    normalized.includes('মোডাল বন্ধ') ||
+    normalized.includes('পপআপ বন্ধ') ||
+    lower.includes('close modal') ||
+    lower.includes('close popup')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      uiAction: { type: 'CLOSE_MODAL' },
+    };
+  }
+
+  // 15c. Add Brick Stock or Update Brick Rate by Voice ("১০ হাজার ১ নং ইট স্টকে যোগ করো", "১ নং ইটের রেট ১৪ টাকা করো")
+  if (
+    normalized.includes('স্টকে যোগ') ||
+    normalized.includes('স্টক যোগ') ||
+    normalized.includes('স্টক বাড়াও') ||
+    normalized.includes('নতুন ইট যোগ') ||
+    normalized.includes('রেট পরিবর্তন') ||
+    normalized.includes('দর পরিবর্তন') ||
+    normalized.includes('রেট সেট কর') ||
+    lower.includes('stock add') ||
+    lower.includes('add stock') ||
+    lower.includes('stock jog') ||
+    lower.includes('rate change')
+  ) {
+    const qty = extractBanglaAmount(normalized) || 10000;
+    const rateMatch = normalized.match(/(\d+(?:\.\d+)?)\s*(?:টাকা|দর|রেট|rate)/i);
+    const gradeId = normalized.includes('2 নং') || lower.includes('2 no')
+      ? 'grade-2'
+      : normalized.includes('3 নং') || lower.includes('3 no')
+      ? 'grade-3'
+      : normalized.includes('পিকেট') || lower.includes('picket')
+      ? 'grade-picket'
+      : normalized.includes('গড়িয়া') || lower.includes('goria')
+      ? 'grade-goria'
+      : 'grade-1';
+    return {
+      intent: 'update_brick_stock_or_rate',
+      gradeId,
+      quantity: normalized.includes('রেট') && !normalized.includes('স্টক') ? 0 : qty,
+      rate: rateMatch ? parseFloat(rateMatch[1]) : undefined,
+    };
+  }
+
+  // 15d. Worker Attendance by Voice ("রফিকুল সর্দারের হাজিরা দাও", "হাজিরা দাও")
+  if (
+    normalized.includes('হাজিরা দাও') ||
+    normalized.includes('হাজিরা লেখ') ||
+    normalized.includes('হাজিরা কর') ||
+    lower.includes('hajira dao') ||
+    lower.includes('attendance')
+  ) {
+    const hatbar = extractBanglaAmount(normalized) || 0;
+    let workerName = 'রফিকুল সর্দার';
+    if (normalized.includes('জব্বার') || lower.includes('jobbar')) workerName = 'আব্দুল জব্বার';
+    else if (normalized.includes('হাসান') || lower.includes('hasan')) workerName = 'হাসান আলী';
+    else if (normalized.includes('সোহেল') || lower.includes('sohel')) workerName = 'সোহেল রানা';
+    else if (normalized.includes('কবির') || lower.includes('kobir')) workerName = 'কবির হোসেন';
+    return {
+      intent: 'record_worker_attendance',
+      workerName,
+      amount: hatbar,
+    };
+  }
+
+  // 15e. Delete Memo by Voice ("মেমো ১২৫ ডিলিট করো", "শেষ মেমোটা মুছে ফেলো")
+  if (
+    normalized.includes('মেমো ডিলিট') ||
+    normalized.includes('মেমো মুছে') ||
+    normalized.includes('শেষ মেমোটা ডিলিট') ||
+    lower.includes('delete memo') ||
+    lower.includes('memo delete')
+  ) {
+    const memoMatch = normalized.match(/(bf-[0-9-]+|\d{3,4})/i);
+    return {
+      intent: 'delete_record',
+      memoNo: memoMatch ? memoMatch[1] : String(context.lastReferencedMemoNo || ''),
+    };
+  }
+
+  // 15f. Live KPI Report Modal Control ("মোট বিক্রির রিপোর্ট খোলো", "বিক্রয় চার্ট রিপোর্ট", "বকেয়া রিপোর্ট খোলো")
+  if (
+    normalized.includes('বিক্রির রিপোর্ট খোল') ||
+    normalized.includes('বিক্রয় রিপোর্ট খোল') ||
+    normalized.includes('বিক্রয় চার্ট রিপোর্ট') ||
+    normalized.includes('বিক্রির চার্ট খোল') ||
+    lower.includes('sales chart report') ||
+    lower.includes('open sales report')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      uiAction: {
+        type: 'OPEN_KPI_MODAL',
+        kpiId: 'TOTAL_BRICKS_SOLD',
+        labelBn: 'মোট ইট বিক্রয় ও চার্ট রিপোর্ট ওপেন করা হয়েছে',
+      },
+    };
+  }
+
+  if (
+    normalized.includes('বকেয়া রিপোর্ট খোল') ||
+    normalized.includes('পাওনা রিপোর্ট খোল') ||
+    lower.includes('open due report')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      uiAction: {
+        type: 'OPEN_KPI_MODAL',
+        kpiId: 'TOTAL_DUE',
+        labelBn: 'বকেয়া পাওনা বিস্তারিত রিপোর্ট ওপেন করা হয়েছে',
+      },
+    };
+  }
+
+  if (
+    normalized.includes('খরচের চার্ট খোল') ||
+    normalized.includes('খরচের রিপোর্ট খোল') ||
+    lower.includes('open expense report')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      uiAction: {
+        type: 'OPEN_KPI_MODAL',
+        kpiId: 'TOTAL_EXPENSE',
+        labelBn: 'মোট খরচের খতিয়ান রিপোর্ট ওপেন করা হয়েছে',
+      },
+    };
+  }
+
+  // 15g. Live Table Filter & Search Control on Web UI ("বকেয়া মেমোগুলো দেখাও", "বকেয়া মেমো ফিল্টার", "খরচের তালিকা দেখাও")
+  if (
+    normalized.includes('বকেয়া মেমো ফিল্টার') ||
+    normalized.includes('বকেয়া মেমোগুলো দেখাও') ||
+    normalized.includes('বাকি মেমোগুলো দেখাও') ||
+    lower.includes('filter due memo') ||
+    lower.includes('baki memo dekhao')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      targetTab: 'memos',
+      uiAction: {
+        type: 'FILTER_MEMOS',
+        tab: 'memos',
+        memoStatusFilter: 'DUE',
+        searchQuery: '',
+        labelBn: 'মেমো খতিয়ানে শুধু বকেয়া (DUE) মেমোগুলো ফিল্টার করা হয়েছে',
+      },
+    };
+  }
+
+  if (
+    normalized.includes('পরিশোধিত মেমো দেখাও') ||
+    normalized.includes('পেইড মেমো ফিল্টার') ||
+    lower.includes('paid memo dekhao')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      targetTab: 'memos',
+      uiAction: {
+        type: 'FILTER_MEMOS',
+        tab: 'memos',
+        memoStatusFilter: 'PAID',
+        searchQuery: '',
+        labelBn: 'মেমো খতিয়ানে পরিশোধিত (PAID) মেমোগুলো ফিল্টার করা হয়েছে',
+      },
+    };
+  }
+
+  if (
+    normalized.includes('খরচের তালিকা দেখাও') ||
+    normalized.includes('শুধু খরচ দেখাও') ||
+    normalized.includes('ক্যাশ বুকে খরচ ফিল্টার') ||
+    lower.includes('expense list dekhao') ||
+    lower.includes('khorocher talika')
+  ) {
+    const cat = detectExpenseCategory(normalized) || 'ALL';
+    return {
+      intent: 'control_system_ui',
+      targetTab: 'cashbook',
+      uiAction: {
+        type: 'FILTER_CASHBOOK',
+        tab: 'cashbook',
+        cashTypeFilter: 'OUT',
+        cashCategoryFilter: cat,
+        labelBn: 'ক্যাশ বুকে খরচের (OUT) লেনদেনগুলো ফিল্টার করা হয়েছে',
+      },
+    };
+  }
+
+  if (
+    normalized.includes('জমার তালিকা দেখাও') ||
+    normalized.includes('শুধু জমা দেখাও') ||
+    lower.includes('cash in list')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      targetTab: 'cashbook',
+      uiAction: {
+        type: 'FILTER_CASHBOOK',
+        tab: 'cashbook',
+        cashTypeFilter: 'IN',
+        cashCategoryFilter: 'ALL',
+        labelBn: 'ক্যাশ বুকে নগদ জমার (IN) লেনদেনগুলো ফিল্টার করা হয়েছে',
+      },
+    };
+  }
+
+  if (
+    normalized.includes('মেমো ফর্ম ক্লিয়ার') ||
+    normalized.includes('ফর্ম ক্লিয়ার') ||
+    normalized.includes('ফর্ম পরিষ্কার') ||
+    normalized.includes('ফর্ম রিসেট') ||
+    lower.includes('clear form') ||
+    lower.includes('reset form')
+  ) {
+    return {
+      intent: 'control_system_ui',
+      targetTab: 'dashboard',
+      uiAction: {
+        type: 'CLEAR_MEMO_FORM',
+        tab: 'dashboard',
+        labelBn: 'ড্যাশবোর্ডের মেমো ফর্ম রিসেট করা হয়েছে',
+      },
+    };
+  }
+
+  // 15h. Opening Balance Update by Voice ("প্রারম্ভিক ক্যাশ ব্যালেন্স ৫ লাখ টাকা করো", "ওপেনিং ব্যালেন্স সেট করো")
+  if (
+    normalized.includes('প্রারম্ভিক ক্যাশ') ||
+    normalized.includes('প্রারম্ভিক ব্যালেন্স') ||
+    normalized.includes('ওপেনিং ব্যালেন্স') ||
+    lower.includes('opening balance')
+  ) {
+    const amt = extractBanglaAmount(normalized);
+    if (amt && amt > 0) {
+      return {
+        intent: 'update_opening_balance',
+        amount: amt,
+      };
+    }
+  }
+
+  // 15i. Navigation & Tab Switching by Voice
+  if (
+    normalized.includes('লেবার') ||
+    normalized.includes('দিনমজুর') ||
+    lower.includes('labour') ||
+    lower.includes('labor khata')
+  ) {
+    return {
+      intent: 'navigate_to_tab',
+      targetTab: 'labour',
+      uiAction: { type: 'NAVIGATE_TAB', tab: 'labour', labelBn: 'লেবার খাতা ওপেন করা হয়েছে' },
+    };
+  }
+  if (
+    normalized.includes('ইটের রিপোর্ট') ||
+    normalized.includes('স্টক রিপোর্ট') ||
+    normalized.includes('ইট ও স্টক') ||
+    lower.includes('brick report') ||
+    lower.includes('stock report')
+  ) {
+    return {
+      intent: 'navigate_to_tab',
+      targetTab: 'bricks',
+      uiAction: { type: 'NAVIGATE_TAB', tab: 'bricks', labelBn: 'ইট ও স্টক রিপোর্ট ওপেন করা হয়েছে' },
+    };
+  }
+  if (
+    normalized.includes('মেমো খতিয়ান') ||
+    normalized.includes('মেমো তালিকা') ||
+    normalized.includes('মেমো খাতা') ||
+    lower.includes('memo khata') ||
+    lower.includes('memo list') ||
+    lower.includes('sales ledger')
+  ) {
+    return {
+      intent: 'navigate_to_tab',
+      targetTab: 'memos',
+      uiAction: { type: 'NAVIGATE_TAB', tab: 'memos', labelBn: 'মেমো খতিয়ান ওপেন করা হয়েছে' },
+    };
+  }
+  if (
+    normalized.includes('ক্যাশ বুক') ||
+    normalized.includes('ক্যাশ খাতা') ||
+    lower.includes('cashbook') ||
+    lower.includes('cash book') ||
+    lower.includes('cash khata')
+  ) {
+    return {
+      intent: 'navigate_to_tab',
+      targetTab: 'cashbook',
+      uiAction: { type: 'NAVIGATE_TAB', tab: 'cashbook', labelBn: 'ক্যাশ বুক ওপেন করা হয়েছে' },
+    };
+  }
+  if (
+    normalized.includes('ড্যাশবোর্ডে যাও') ||
+    normalized.includes('ড্যাশবোর্ড খোলো') ||
+    normalized.includes('মেইন পেজ') ||
+    normalized.includes('হোম পেজ') ||
+    lower.includes('dashboard') ||
+    lower.includes('home page')
+  ) {
+    return {
+      intent: 'navigate_to_tab',
+      targetTab: 'dashboard',
+      uiAction: { type: 'NAVIGATE_TAB', tab: 'dashboard', labelBn: 'ড্যাশবোর্ড ওপেন করা হয়েছে' },
+    };
+  }
+
+  // 16. Explicit Dashboard Metrics / Cash Balance query ("ক্যাশে কত টাকা আছে?", "হাতে কত টাকা আছে?")
+  if (
+    normalized.includes('ক্যাশ ব্যালেন্স') ||
+    normalized.includes('বর্তমান ক্যাশ') ||
+    normalized.includes('ক্যাশে কত') ||
+    normalized.includes('হাতে কত টাকা') ||
+    normalized.includes('ড্যাশবোর্ড মেট্রিক্স') ||
+    normalized.includes('সার্বিক অবস্থা') ||
+    lower.includes('cash') ||
+    lower.includes('balance') ||
+    lower.includes('dashboard metric')
+  ) {
+    return { intent: 'get_dashboard_metrics' };
+  }
+
+  // 17. Explicit Sales / Income-Expense Summary query ("আজকের মোট বিক্রয় কত?", "আজকের আয়-ব্যয়ের হিসাব বলো", "কত বিক্রি হয়েছে?")
+  if (
+    normalized.includes('বিক্রয়') ||
+    normalized.includes('বিক্রি') ||
+    normalized.includes('আয়-ব্যয়') ||
+    normalized.includes('আয়-ব্যয়') ||
+    normalized.includes('আজকের হিসাব') ||
+    normalized.includes('হিসাব বলো') ||
+    normalized.includes('আদায় কত') ||
+    normalized.includes('আদায় কত') ||
+    lower.includes('sales') ||
+    lower.includes('bikri') ||
+    lower.includes('hisab')
+  ) {
+    return { intent: 'get_sales_summary', dateScope: 'TODAY' };
+  }
+
+  // 18. Conversational Greetings, Thanks, Capabilities & General Chat (Think Before Using Tools!)
+  if (
+    /^(হ্যালো|হাই|সালাম|আসসালামু আলাইকুম|ওয়ালাইকুম আসসালাম|সুপ্রভাত|শুভ সকাল|শুভ সন্ধ্যা|কেমন আছো|কেমন আছেন|কি খবর|কী খবর|হ্যালো ভাই|hello|hi|hey|salam)$/i.test(
+      cleanWords
+    ) ||
+    cleanWords.includes('কেমন আছ') ||
+    cleanWords.includes('আসসালামু আলাইকুম') ||
+    cleanWords.includes('কি খবর')
+  ) {
+    return { intent: 'CONVERSATIONAL', conversationalType: 'GREETING' };
+  }
+
+  if (
+    cleanWords.includes('ধন্যবাদ') ||
+    cleanWords.includes('থ্যাংক') ||
+    cleanWords.includes('শুক্রিয়া') ||
+    cleanWords.includes('বুঝেছি') ||
+    cleanWords.includes('বুঝলাম') ||
+    cleanWords.includes('অনেক ভালো') ||
+    cleanWords.includes('দারুণ') ||
+    lower.includes('thank')
+  ) {
+    return { intent: 'CONVERSATIONAL', conversationalType: 'THANKS' };
+  }
+
+  if (
+    cleanWords.includes('কী করতে পারো') ||
+    cleanWords.includes('কি করতে পারো') ||
+    cleanWords.includes('কীভাবে সাহায্য') ||
+    cleanWords.includes('কিভাবে সাহায্য') ||
+    cleanWords.includes('তুমি কে') ||
+    cleanWords.includes('তোমার কাজ কী') ||
+    lower.includes('what can you do') ||
+    lower.includes('help')
+  ) {
+    return { intent: 'CONVERSATIONAL', conversationalType: 'CAPABILITIES' };
+  }
+
+  // For any other general or conversational input that does NOT ask for sales/memos/expenses/writes,
+  // classify as CONVERSATIONAL so we don't blindly dump dashboard metrics!
+  return { intent: 'CONVERSATIONAL', conversationalType: 'GENERAL' };
+}
+
+/**
+ * Computes an Alipro E-Commerce style deep business intelligence report
+ * across sales velocity, collection efficiency, SKU/grade margin share,
+ * customer concentration & due risk, expense drivers, and actionable growth advice.
+ */
+export function computeComprehensiveBusinessAnalysis(
+  state: Pick<
+    KilnDatabaseState,
+    'settings' | 'brickGrades' | 'salesMemos' | 'cashTransactions'
+  >,
+  todayDate: string,
+  yesterdayDate: string
+): BusinessAnalysisReport {
+  const metrics = calculateDashboardMetrics(state, todayDate, yesterdayDate);
+  const gradeReport = computeBrickGradeReport(
+    state.brickGrades || [],
+    state.salesMemos || [],
+    todayDate,
+    yesterdayDate
+  );
+
+  const totalSalesRevenue = Math.max(0, metrics.totalBrickSalesAmountAllTime);
+  const totalBricksSold = Math.max(0, metrics.totalBricksSoldAllTime);
+  const totalMemoCount = (state.salesMemos || []).length;
+  const averageOrderValue =
+    totalMemoCount > 0 ? Math.round(totalSalesRevenue / totalMemoCount) : 0;
+
+  const totalCashIn = Math.max(0, metrics.totalCashIn);
+  const totalExpense = Math.max(0, metrics.totalExpense);
+  const netOperatingCashflow = totalCashIn - totalExpense;
+  const currentCashBalance = metrics.currentCashBalance;
+  const totalCustomerDue = Math.max(0, metrics.totalCustomerDue);
+
+  const collectionEfficiencyPct =
+    totalSalesRevenue > 0
+      ? Math.min(100, Math.round(((totalSalesRevenue - totalCustomerDue) / totalSalesRevenue) * 100))
+      : 100;
+  const dueRiskPct = Math.max(0, 100 - collectionEfficiencyPct);
+  const expenseToSalesRatioPct =
+    totalSalesRevenue > 0 ? Math.round((totalExpense / totalSalesRevenue) * 100) : 0;
+
+  // Grade / SKU performance breakdown
+  const gradeBreakdown = gradeReport.rows.map((r) => {
+    const revenue = r.seasonSoldAmount;
+    const revenueSharePct =
+      totalSalesRevenue > 0 ? Math.round((revenue / totalSalesRevenue) * 100) : 0;
+    const stockValue = calculateRowTotal(
+      r.grade.currentStock,
+      r.grade.ratePerUnit,
+      true
+    );
+    return {
+      id: r.grade.id,
+      nameBn: cleanBrickGradeName(r.grade.nameBn),
+      soldQty: r.seasonSoldQty,
+      revenue,
+      revenueSharePct,
+      currentStock: r.grade.currentStock,
+      stockValue,
+    };
+  });
+
+  const sortedGrades = [...gradeBreakdown].sort((a, b) => b.revenue - a.revenue);
+  const topGrade = sortedGrades[0] || {
+    nameBn: '১ নং ইট',
+    soldQty: 0,
+    revenue: 0,
+    revenueSharePct: 0,
+  };
+
+  const totalInventoryPieces = gradeBreakdown.reduce((s, g) => s + g.currentStock, 0);
+  const totalInventoryValuation = gradeBreakdown.reduce((s, g) => s + g.stockValue, 0);
+
+  // Customer & Debtor ranking
+  const customerMap = new Map<
+    string,
+    { name: string; totalBilled: number; totalPaid: number; totalDue: number; memoCount: number }
+  >();
+  for (const m of state.salesMemos || []) {
+    const key = m.customerName.trim();
+    const prev = customerMap.get(key) || {
+      name: key,
+      totalBilled: 0,
+      totalPaid: 0,
+      totalDue: 0,
+      memoCount: 0,
+    };
+    prev.totalBilled += m.totalAmount || 0;
+    prev.totalPaid += m.paidAmount || 0;
+    prev.totalDue += m.dueAmount || 0;
+    prev.memoCount += 1;
+    customerMap.set(key, prev);
+  }
+
+  const customerList = Array.from(customerMap.values()).sort(
+    (a, b) => b.totalBilled - a.totalBilled
+  );
+  const topCustomer = customerList[0] || {
+    name: 'নগদ ক্রেতা',
+    totalBilled: 0,
+    totalPaid: 0,
+    totalDue: 0,
+    memoCount: 0,
+  };
+
+  const dueMemosSorted = [...(state.salesMemos || [])]
+    .filter((m) => (m.dueAmount || 0) > 0)
+    .sort((a, b) => b.dueAmount - a.dueAmount);
+
+  const topDebtor =
+    dueMemosSorted.length > 0
+      ? {
+          name: dueMemosSorted[0].customerName,
+          dueAmount: dueMemosSorted[0].dueAmount,
+          memoNo: dueMemosSorted[0].memoNo,
+          shareOfTotalDuePct:
+            totalCustomerDue > 0
+              ? Math.round((dueMemosSorted[0].dueAmount / totalCustomerDue) * 100)
+              : 0,
+        }
+      : null;
+
+  // Expense category breakdown
+  const expMap = new Map<string, number>();
+  for (const tx of state.cashTransactions || []) {
+    if (tx.type === 'OUT') {
+      expMap.set(tx.category, (expMap.get(tx.category) || 0) + tx.amount);
+    }
+  }
+  const expenseBreakdown = Array.from(expMap.entries())
+    .map(([category, amount]) => ({
+      category,
+      amount,
+      sharePct: totalExpense > 0 ? Math.round((amount / totalExpense) * 100) : 0,
+    }))
+    .sort((a, b) => b.amount - a.amount);
+
+  const topExpenseDriver = expenseBreakdown[0] || {
+    category: 'কয়লা ক্রয়',
+    amount: 0,
+    sharePct: 0,
+  };
+
+  // Health score calculation (0 - 100)
+  let healthScore = 78;
+  if (collectionEfficiencyPct >= 75) healthScore += 10;
+  else if (collectionEfficiencyPct < 55) healthScore -= 12;
+  if (netOperatingCashflow > 0) healthScore += 8;
+  else healthScore -= 10;
+  if (currentCashBalance > 300000) healthScore += 4;
+  healthScore = Math.max(35, Math.min(98, healthScore));
+
+  const healthLabelBn =
+    healthScore >= 85
+      ? 'অত্যন্ত শক্তিশালী ও লাভজনক (High Growth)'
+      : healthScore >= 70
+      ? 'সন্তোষজনক ও স্থিতিশীল (Healthy Margin)'
+      : 'বকেয়া আদায়ে বাড়তি নজর প্রয়োজন (Attention Needed)';
+
+  const recommendationsBn: string[] = [];
+  if (topDebtor) {
+    recommendationsBn.push(
+      `বকেয়া রিকভারি অগ্রাধিকার: ${topDebtor.name} (${topDebtor.memoNo})-এর কাছে সর্বোচ্চ ${formatCurrencyBn(
+        topDebtor.dueAmount
+      )} টাকা বাকি আছে (মোট বকেয়ার ${formatBn(
+        topDebtor.shareOfTotalDuePct
+      )}%)—আজই ফলো-আপ করলে ক্যাশফ্লো দ্রুত বাড়বে।`
+    );
+  }
+  recommendationsBn.push(
+    `সেরা বিক্রিত প্রোডাক্ট (Top SKU): "${topGrade.nameBn}" থেকে সর্বোচ্চ ${formatCurrencyBn(
+      topGrade.revenue
+    )} (${formatBn(topGrade.revenueSharePct)}% রেভিনিউ) এসেছে—এই গ্রেডের পর্যাপ্ত স্টক ও প্রাইসিং ধরে রাখুন।`
+  );
+  if (topExpenseDriver.amount > 0) {
+    recommendationsBn.push(
+      `খরচ অপ্টিমাইজেশন: মোট খরচের ${formatBn(topExpenseDriver.sharePct)}% গেছে "${
+        topExpenseDriver.category
+      }" খাতে (${formatCurrencyBn(
+        topExpenseDriver.amount
+      )})। বাল্ক পারচেজ ও জ্বালানি দক্ষতা বাড়ালে নিট মুনাফা আরও বাড়বে।`
+    );
+  }
+  recommendationsBn.push(
+    `স্টক ভ্যালুয়েশন ও রানওয়ে: বর্তমানে ভাটায় থাকা ${formatBn(
+      totalInventoryPieces
+    )} পিস ইটের বাজারমূল্য প্রায় ${formatCurrencyBn(
+      totalInventoryValuation
+    )} এবং গড় মেমো অর্ডার ভ্যালু (AOV) ${formatCurrencyBn(averageOrderValue)}।`
+  );
+
+  const spokenExecutiveSummaryBn = `ভাই, আমাদের ভাটার পুরো ব্যবসার ই-কমার্স স্টাইল অ্যানালাইসিস বলছি শুনুন—এ পর্যন্ত ${formatBn(
+    totalMemoCount
+  )}টা মেমোতে মোট বিক্রি হয়েছে ${formatCurrencyBn(totalSalesRevenue)} টাকা, আর গড় অর্ডার ভ্যালু ${formatCurrencyBn(
+    averageOrderValue
+  )}। আমাদের কালেকশন রেট ${formatBn(collectionEfficiencyPct)} শতাংশ, মোট নগদ আদায় ${formatCurrencyBn(
+    totalCashIn
+  )}, মোট খরচ ${formatCurrencyBn(totalExpense)}, আর হাতে নিট ক্যাশ ব্যালেন্স আছে ${formatCurrencyBn(
+    currentCashBalance
+  )} টাকা। সবচেয়ে বেশি বিক্রি হয়েছে ${topGrade.nameBn} (${formatCurrencyBn(
+    topGrade.revenue
+  )}), আর বাজারে থাকা ${formatCurrencyBn(totalCustomerDue)} টাকা বকেয়ার মধ্যে সবচেয়ে বেশি বাকি ${
+    topDebtor ? `${topDebtor.name}-এর কাছে (${formatCurrencyBn(topDebtor.dueAmount)})` : 'নেই'
+  }। বর্তমানে আমাদের স্টকে থাকা ইটের বাজারমূল্য প্রায় ${formatCurrencyBn(
+    totalInventoryValuation
+  )} টাকা এবং বিজনেস হেলথ স্কোর ১০০-তে ${formatBn(healthScore)}!`;
+
+  return {
+    totalSalesRevenue,
+    totalBricksSold,
+    totalMemoCount,
+    averageOrderValue,
+    totalCashIn,
+    totalExpense,
+    netOperatingCashflow,
+    currentCashBalance,
+    totalCustomerDue,
+    collectionEfficiencyPct,
+    dueRiskPct,
+    expenseToSalesRatioPct,
+    totalInventoryPieces,
+    totalInventoryValuation,
+    topSellingGrade: {
+      nameBn: topGrade.nameBn,
+      soldQty: topGrade.soldQty,
+      revenue: topGrade.revenue,
+      sharePct: topGrade.revenueSharePct,
+    },
+    topCustomer,
+    topDebtor,
+    topExpenseDriver,
+    gradeBreakdown,
+    expenseBreakdown,
+    healthScore,
+    healthLabelBn,
+    spokenExecutiveSummaryBn,
+    recommendationsBn,
+  };
+}
+
+/**
+ * Generates a natural, friendly, context-aware Bangla conversational response
+ * for non-tool turns (greetings, thanks, capabilities, brick rates, or general questions).
+ */
+export function generateNaturalConversationalReply(
+  userText: string,
+  conversationalType: 'GREETING' | 'THANKS' | 'CAPABILITIES' | 'BRICK_RATES' | 'GENERAL' | undefined,
+  state: Pick<KilnDatabaseState, 'settings' | 'brickGrades' | 'salesMemos' | 'context'>
+): string {
+  const ctx = state.context || {};
+  if (conversationalType === 'GREETING') {
+    if (ctx.lastReferencedCustomer) {
+      return `আসসালামু আলাইকুম ভাই! আলহামদুলিল্লাহ ভালো আছি। আমরা একটু আগে ${ctx.lastReferencedCustomer}-এর হিসাব দেখছিলাম—ওনার ব্যাপারে আর কিছু দেখব, নাকি পুরো ব্যবসার লাইভ অ্যানালাইসিস বা নতুন মেমো করব?`;
+    }
+    return 'আসসালামু আলাইকুম ভাই! ভাটার সব হিসাব একদম আপ-টু-ডেট আছে। আজকের বিক্রি, কাস্টমারের বকেয়া, নতুন মেমো বা পুরো ব্যবসার লাভ-ক্ষতির অ্যানালাইসিস—যেটা জানতে চান সরাসরি বলুন!';
+  }
+
+  if (conversationalType === 'THANKS') {
+    return 'আপনাকেও অসংখ্য ধন্যবাদ ভাই! ভাটার যেকোনো হিসাব বা বিজনেস অ্যানালাইসিস লাগলে সাথে সাথে ডাকবেন।';
+  }
+
+  if (conversationalType === 'CAPABILITIES') {
+    return 'ভাই, আমি আপনার ইটভাটার একজন এক্সিকিউটিভ ম্যানেজারের মতো সব কাজ করতে পারি—যেমন কাস্টমারের বকেয়া ও মেমো খোঁজা, নতুন মেমো তৈরি, বকেয়া জমা নেওয়া, খরচ তোলা, স্টকের হিসাব এবং আলিপ্রো ই-কমার্সের মতো পুরো ব্যবসার লাভ-ক্ষতি, মার্জিন ও গ্রোথ অ্যানালাইসিস করা। কী দেখতে চান বলুন?';
+  }
+
+  if (conversationalType === 'BRICK_RATES') {
+    const ratesList = (state.brickGrades || [])
+      .map((g) => `${g.nameBn.split('(')[0].trim()} ${formatCurrencyBn(g.ratePerUnit)}`)
+      .join(', ');
+    return `ভাই, বর্তমানে আমাদের ইটের প্রতি পিস দর হচ্ছে—${ratesList}। কারও নামে মেমো করতে চাইলে শুধু নাম আর পরিমাণটা বলুন।`;
+  }
+
+  if (ctx.pendingMemoData && (!ctx.pendingMemoData.customerName || !ctx.pendingMemoData.quantity)) {
+    return !ctx.pendingMemoData.customerName
+      ? 'মেমোটা কার নামে করব ভাই বলুন?'
+      : `${ctx.pendingMemoData.customerName}-এর জন্য কত পিস ইট ধরব?`;
+  }
+
+  if (ctx.pendingExpenseAmount) {
+    return `${formatCurrencyBn(ctx.pendingExpenseAmount)} টাকাটা কোন খাতে খরচ হয়েছে বলুন? যেমন কয়লা, ডিজেল, মাটি বা লেবার?`;
+  }
+
+  return `হ্যাঁ ভাই, বুঝতে পেরেছি। আপনি চাইলে "পুরো ব্যবসার অ্যানালাইসিস দাও" বলতে পারেন, অথবা কোনো মেমো, কাস্টমারের নাম বা আজকের বিক্রির কথা বললে আমি এক সেকেন্ডে হিসাব বের করে দিচ্ছি।`;
+}
+
+

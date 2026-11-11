@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <script>
+      (function () {
+        var NativeWS = window.WebSocket;
+        if (NativeWS) {
+          var MockViteWS = function (url, protocols) {
+            var isViteHmr =
+              protocols === 'vite-hmr' ||
+              (Array.isArray(protocols) && protocols.indexOf('vite-hmr') !== -1) ||
+              (typeof url === 'string' && url.indexOf('token=') !== -1 && url.indexOf('/live') === -1);
+            if (!isViteHmr) {
+              return protocols !== undefined ? new NativeWS(url, protocols) : new NativeWS(url);
+            }
+            var target = new EventTarget();
+            target.url = url;
+            target.protocol = 'vite-hmr';
+            target.readyState = 1;
+            target.CONNECTING = 0;
+            target.OPEN = 1;
+            target.CLOSING = 2;
+            target.CLOSED = 3;
+            target.send = function () {};
+            target.close = function () {};
+            return target;
+          };
+          MockViteWS.prototype = NativeWS.prototype;
+          MockViteWS.CONNECTING = 0;
+          MockViteWS.OPEN = 1;
+          MockViteWS.CLOSING = 2;
+          MockViteWS.CLOSED = 3;
+          window.WebSocket = MockViteWS;
+        }
+        var isWsErr = function (v) {
+          var s = (v && (v.message || (v.reason && v.reason.message) || String(v))) || '';
+          return (
+            s.indexOf('WebSocket closed without opened') !== -1 ||
+            s.indexOf('failed to connect to websocket') !== -1
+          );
+        };
+        window.addEventListener(
+          'unhandledrejection',
+          function (e) {
+            if (isWsErr(e.reason)) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+            }
+          },
+          true
+        );
+        window.addEventListener(
+          'error',
+          function (e) {
+            if (isWsErr(e.error) || isWsErr(e.message)) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+            }
+          },
+          true
+        );
+        var origErr = console.error;
+        console.error = function () {
+          for (var i = 0; i < arguments.length; i++) {
+            if (isWsErr(arguments[i])) return;
+          }
+          return origErr.apply(console, arguments);
+        };
+      })();
+    </script>
+    <title>SBL মিষ্টি মাটির ইট (বাবুলিয়া, সাতক্ষীরা) — ভাটা ম্যানেজমেন্ট সিস্টেম</title>
+    <meta name="description" content="SBL মিষ্টি মাটির ইট (বাবুলিয়া, সাতক্ষীরা) ইটের ভাটার ডিজিটাল ক্যাশ মেমো, স্টক, লেবার ও ক্যাশ বুক ম্যানেজমেন্ট সিস্টেম।" />
+    <meta property="og:title" content="SBL মিষ্টি মাটির ইট (বাবুলিয়া, সাতক্ষীরা) — ভাটা ম্যানেজমেন্ট সিস্টেম" />
+    <meta property="og:description" content="SBL মিষ্টি মাটির ইট (বাবুলিয়া, সাতক্ষীরা) ইটের ভাটার ডিজিটাল ক্যাশ মেমো, স্টক, লেবার ও ক্যাশ বুক ম্যানেজমেন্ট সিস্টেম।" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#061510" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="SBL Bricks" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  </head>
+  <body class="bg-stone-50 text-slate-900 antialiased selection:bg-amber-600 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

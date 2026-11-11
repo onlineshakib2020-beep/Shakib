@@ -1,0 +1,199 @@
+{
+  "settings": {
+    "bhataName": "SBL মিষ্টি মাটির ইট (বাবুলিয়া, সাতক্ষীরা)",
+    "tagline": "ইটভাটার আধুনিক ডিজিটাল সেলস ও সার্বিক হিসাব ব্যবস্থাপনা",
+    "proprietorName": "মোঃ কামরুল ইসলাম সাহেব",
+    "phone1": "01913-678010",
+    "phone2": "01728-287018",
+    "address": "বাবুলিয়া, সাতক্ষীরা সদর, সাতক্ষীরা",
+    "openingBalance": 0,
+    "theme": "light",
+    "dailyGoals": {
+      "rawBricksCutTarget": 50000,
+      "bricksSoldTarget": 30000,
+      "cashCollectionTarget": 250000,
+      "unloadLinesTarget": 8
+    }
+  },
+  "brickGrades": [
+    {
+      "id": "grade-1",
+      "code": "BF-1",
+      "nameBn": "১ নং ইট",
+      "nameEn": "1 No Brick",
+      "ratePerUnit": 11000,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-picket",
+      "code": "BF-PKT",
+      "nameBn": "পিকেট ইট",
+      "nameEn": "Picket Brick",
+      "ratePerUnit": 11000,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-1-5",
+      "code": "BF-1.5",
+      "nameBn": "১.৫ নং ইট",
+      "nameEn": "1.5 No Brick",
+      "ratePerUnit": 10500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-2",
+      "code": "BF-2",
+      "nameBn": "২ নং ইট",
+      "nameEn": "2 No Brick",
+      "ratePerUnit": 9500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-3",
+      "code": "BF-3",
+      "nameBn": "৩ নং ইট",
+      "nameEn": "3 No Brick",
+      "ratePerUnit": 8500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-goria",
+      "code": "BF-GOR",
+      "nameBn": "গড়িয়া ও ঝামা ইট",
+      "nameEn": "Goria Brick",
+      "ratePerUnit": 7500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-adla",
+      "code": "BF-ADL",
+      "nameBn": "আদলা ও ড্যামেজ ইট",
+      "nameEn": "Adla / Broken Brick",
+      "ratePerUnit": 6000,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    }
+  ],
+  "salesMemos": [],
+  "cashTransactions": [],
+  "workerProfiles": [],
+  "workerAttendance": [],
+  "kilnNotes": [],
+  "millPots": [],
+  "chulliLoads": [],
+  "poraiMistriRecords": [],
+  "chulliUnloads": [],
+  "rubbishRecords": [],
+  "woodFuelRecords": [],
+  "soilCoalRecords": [],
+  "dadonRecords": [],
+  "advanceBookings": [],
+  "vehicleDieselRecords": [],
+  "complianceRecords": [],
+  "productionPayments": [],
+  "memoDeliveries": [],
+  "kilnUnits": [
+    {
+      "id": "sbl-1",
+      "nameBn": "SBL মিষ্টি মাটির ইট — ভাটা-১ (বাবুলিয়া, সাতক্ষীরা)",
+      "nameEn": "SBL Sweet Clay Bricks — Kiln-1 (Babulia, Satkhira)",
+      "locationBn": "বাবুলিয়া, সাতক্ষীরা সদর, সাতক্ষীরা",
+      "active": true
+    },
+    {
+      "id": "sbl-2",
+      "nameBn": "SBL মিষ্টি মাটির ইট — ভাটা-২ (সাতক্ষীরা)",
+      "nameEn": "SBL Sweet Clay Bricks — Kiln-2 (Satkhira)",
+      "locationBn": "সাতক্ষীরা সদর, সাতক্ষীরা",
+      "active": true
+    }
+  ],
+  "kilnSeasons": [
+    {
+      "id": "season-2026-2027",
+      "nameBn": "সিজন ২০২৬–২০২৭ (চলমান ভাটা সিজন)",
+      "nameEn": "2026–2027 Season",
+      "startDate": "2026-10-01",
+      "endDate": "2027-06-30",
+      "kilnIds": [
+        "sbl-1",
+        "sbl-2"
+      ],
+      "status": "ACTIVE",
+      "damageOrAdjustmentBricks": 0,
+      "revisionHistory": [
+        {
+          "id": "rev-init-2026",
+          "timestamp": "2026-10-01T08:00:00.000Z",
+          "action": "CREATED",
+          "actorName": "মোঃ কামরুল ইসলাম সাহেব",
+          "reasonBn": "২০২৬–২০২৭ ভাটা সিজন প্রারম্ভিক কনফিগারেশন।"
+        }
+      ],
+      "createdAt": "2026-10-01T08:00:00.000Z"
+    },
+    {
+      "id": "season-2025-2026",
+      "nameBn": "সিজন ২০২৫–২০২৬ (পূর্ববর্তী ভাটা সিজন)",
+      "nameEn": "2025–2026 Season",
+      "startDate": "2025-10-01",
+      "endDate": "2026-06-30",
+      "kilnIds": [
+        "sbl-1"
+      ],
+      "status": "ACTIVE",
+      "damageOrAdjustmentBricks": 0,
+      "revisionHistory": [
+        {
+          "id": "rev-init-2025",
+          "timestamp": "2025-10-01T08:00:00.000Z",
+          "action": "CREATED",
+          "actorName": "মোঃ কামরুল ইসলাম সাহেব",
+          "reasonBn": "২০২৫–২০২৬ ভাটা সিজন রেকর্ড সংরক্ষণ।"
+        }
+      ],
+      "createdAt": "2025-10-01T08:00:00.000Z"
+    }
+  ],
+  "agentTasks": [],
+  "agentMessages": [
+    {
+      "id": "msg-welcome",
+      "role": "assistant",
+      "text": "আসসালামু আলাইকুম! BrickFlow — Bhata Management System প্রস্তুত। সকল হিসাব ০ (শূন্য) থেকে শুরু করা হয়েছে।",
+      "timestamp": "2026-11-08T08:00:00.000Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "audit-1794154231934-5dah",
+      "timestamp": "2026-11-08T16:10:31.934Z",
+      "actor": "USER",
+      "action": "RESET_ALL_DATA",
+      "detailsBn": "সম্পূর্ণ ডাটাবেস রিসেট করে সকল হিসাব ০ (শূন্য) করা হয়েছে।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1",
+      "timestamp": "2026-11-08T08:00:00.000Z",
+      "actor": "SYSTEM_QA",
+      "action": "SYSTEM_INIT",
+      "detailsBn": "BrickFlow ম্যানেজমেন্ট সিস্টেম সকল হিসাব ০ (শূন্য) করে প্রস্তুত করা হয়েছে।",
+      "status": "SUCCESS"
+    }
+  ],
+  "context": {}
+}

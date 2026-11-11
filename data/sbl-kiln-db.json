@@ -1,0 +1,1235 @@
+{
+  "settings": {
+    "phone1": "01913-678010",
+    "tagline": "ইটভাটার আধুনিক ডিজিটাল সেলস ও সার্বিক হিসাব ব্যবস্থাপনা",
+    "phone2": "01728-287018",
+    "address": "বাবুলিয়া, সাতক্ষীরা সদর, সাতক্ষীরা",
+    "bhataName": "SBL মিষ্টি মাটির ইট (বাবুলিয়া, সাতক্ষীরা)",
+    "proprietorName": "মোঃ কামরুল ইসলাম সাহেব",
+    "dailyGoals": {
+      "unloadLinesTarget": 8,
+      "cashCollectionTarget": 250000,
+      "rawBricksCutTarget": 50000,
+      "bricksSoldTarget": 30000
+    },
+    "theme": "light",
+    "openingBalance": 0
+  },
+  "brickGrades": [
+    {
+      "currentStock": 0,
+      "id": "grade-1",
+      "ratePerThousand": true,
+      "ratePerUnit": 11000,
+      "code": "BF-1",
+      "seasonProduced": 0,
+      "nameBn": "১ নং ইট",
+      "nameEn": "1 No Brick"
+    },
+    {
+      "currentStock": 0,
+      "code": "BF-PKT",
+      "id": "grade-picket",
+      "ratePerUnit": 11000,
+      "ratePerThousand": true,
+      "seasonProduced": 0,
+      "nameEn": "Picket Brick",
+      "nameBn": "পিকেট ইট"
+    },
+    {
+      "ratePerThousand": true,
+      "id": "grade-1-5",
+      "seasonProduced": 0,
+      "code": "BF-1.5",
+      "nameBn": "১.৫ নং ইট",
+      "currentStock": 0,
+      "nameEn": "1.5 No Brick",
+      "ratePerUnit": 10500
+    },
+    {
+      "code": "BF-2",
+      "ratePerUnit": 9500,
+      "id": "grade-2",
+      "nameEn": "2 No Brick",
+      "currentStock": 0,
+      "nameBn": "২ নং ইট",
+      "ratePerThousand": true,
+      "seasonProduced": 0
+    },
+    {
+      "nameBn": "৩ নং ইট",
+      "nameEn": "3 No Brick",
+      "seasonProduced": 0,
+      "id": "grade-3",
+      "currentStock": 0,
+      "ratePerUnit": 8500,
+      "code": "BF-3",
+      "ratePerThousand": true
+    },
+    {
+      "ratePerThousand": true,
+      "seasonProduced": 0,
+      "nameEn": "Goria Brick",
+      "currentStock": 0,
+      "nameBn": "গড়িয়া ও ঝামা ইট",
+      "code": "BF-GOR",
+      "id": "grade-goria",
+      "ratePerUnit": 7500
+    },
+    {
+      "code": "BF-ADL",
+      "currentStock": 0,
+      "ratePerThousand": true,
+      "nameEn": "Adla / Broken Brick",
+      "ratePerUnit": 6000,
+      "nameBn": "আদলা ও ড্যামেজ ইট",
+      "id": "grade-adla",
+      "seasonProduced": 0
+    }
+  ],
+  "salesMemos": [
+    {
+      "customerAddress": "পরানদাহ",
+      "vehicleType": "ট্রাক (Truck)",
+      "memoNo": "3258",
+      "deliveredQuantity": 0,
+      "customerName": "বাকিবুল্লাহ",
+      "id": "memo-1794208327377",
+      "customerPhone": "—",
+      "createdAt": "2026-11-09T07:12:07.377Z",
+      "paymentHistory": [
+        {
+          "note": "মেমো তৈরির সময় নগদ জমা",
+          "date": "2026-11-08",
+          "id": "mpay-1794208327377-init",
+          "paymentMethod": "নগদ ক্যাশ",
+          "amount": 120000,
+          "type": "INITIAL",
+          "createdAt": "2026-11-09T07:12:07.377Z"
+        }
+      ],
+      "deliveryHistory": [],
+      "paidAmount": 120000,
+      "totalAmount": 120000,
+      "note": "",
+      "date": "2026-11-08",
+      "items": [
+        {
+          "rate": 10000,
+          "gradeName": "১ নং ইট",
+          "lineTotal": 20000,
+          "gradeId": "grade-1",
+          "quantity": 2000,
+          "ratePerThousand": false,
+          "id": "it-1794208327377-hbph"
+        },
+        {
+          "ratePerThousand": false,
+          "gradeId": "grade-picket",
+          "lineTotal": 100000,
+          "gradeName": "পিকেট ইট",
+          "quantity": 10000,
+          "rate": 10000,
+          "id": "it-1794208327377-acrt"
+        }
+      ],
+      "truckNo": "সাতক্ষীরা-ট-১১-",
+      "dueAmount": 0,
+      "remainingDeliveryQuantity": 12000,
+      "duePromiseDate": "",
+      "subTotal": 120000,
+      "driverName": "—",
+      "discount": 0,
+      "paymentMethod": "নগদ ক্যাশ",
+      "deliveryStatus": "BOOKING",
+      "status": "PAID",
+      "driverPhone": "—"
+    }
+  ],
+  "cashTransactions": [
+    {
+      "id": "tx-1794236373403",
+      "date": "2026-11-09",
+      "type": "OUT",
+      "category": "মাটি ও জমি লিজ পরিশোধ",
+      "amount": 30000,
+      "description": "জমির লিজ কিস্তি পরিশোধ: হাজী মোজাম্মেল হক (বাবুলিয়া দক্ষিণ বিল)",
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "createdAt": "2026-11-09T14:59:33.403Z"
+    },
+    {
+      "createdAt": "2026-11-09T07:12:07.377Z",
+      "verified": true,
+      "referenceId": "memo-1794208327377",
+      "description": "মেমো 3258 (বাকিবুল্লাহ - ২,০০০টি ১ নং ইট, ১০,০০০টি পিকেট ইট)",
+      "date": "2026-11-08",
+      "category": "ইট বিক্রয় আদায়",
+      "id": "tx-1794208327378",
+      "paymentMethod": "নগদ ক্যাশ",
+      "type": "IN",
+      "amount": 120000
+    },
+    {
+      "verified": true,
+      "id": "tx-wood-1794207455754",
+      "type": "OUT",
+      "category": "বিদ্যুৎ ও জ্বালানি",
+      "paymentMethod": "নগদ ক্যাশ",
+      "amount": 869400,
+      "createdAt": "2026-11-09T06:57:35.754Z",
+      "date": "2026-11-09",
+      "referenceId": "wood-1794207455753-ee77",
+      "description": "জ্বালানি কাঠ ক্রয় (৩. লাকড়ি — চেরা লাকড়ি / ফাড়াই লাকড়ি · ১,৬১০ মণ @ ৳540/মণ): ওসমান সাতক্ষীরা তুষ"
+    },
+    {
+      "verified": true,
+      "category": "বিদ্যুৎ ও জ্বালানি",
+      "type": "OUT",
+      "paymentMethod": "নগদ ক্যাশ",
+      "date": "2026-11-09",
+      "createdAt": "2026-11-09T06:55:26.617Z",
+      "amount": 525000,
+      "referenceId": "wood-1794207326603-v0k0",
+      "description": "জ্বালানি কাঠ ক্রয় (২. কয়লা — ইন্দোনেশিয়ান / বড়পুকুরিয়া কয়লা · ২১ টন @ ৳25000/টন): যশোর নোয়াপাড়া",
+      "id": "tx-wood-1794207326603"
+    },
+    {
+      "createdAt": "2026-11-09T02:37:13.815Z",
+      "type": "OUT",
+      "date": "2026-11-09",
+      "amount": 69860,
+      "verified": true,
+      "paymentMethod": "নগদ ক্যাশ",
+      "category": "বিদ্যুৎ ও জ্বালানি",
+      "id": "tx-wood-1794191833814",
+      "referenceId": "wood-1794191833814-qlky",
+      "description": "জ্বালানি কাঠ ক্রয় (মিক্সড জ্বালানি কাঠ · ৪৫৬ মণ @ ৳160/মণ): আনিস কাঠ"
+    },
+    {
+      "amount": 31710,
+      "type": "OUT",
+      "category": "বিদ্যুৎ ও জ্বালানি",
+      "verified": true,
+      "referenceId": "wood-1794191690957-hi0e",
+      "description": "জ্বালানি কাঠ ক্রয় (মিক্সড জ্বালানি কাঠ · ১২১ মণ @ ৳140/মণ): আরিজুল কাঠ",
+      "paymentMethod": "নগদ ক্যাশ",
+      "id": "tx-wood-1794191690957",
+      "createdAt": "2026-11-09T02:34:50.957Z",
+      "date": "2026-11-09"
+    },
+    {
+      "paymentMethod": "নগদ ক্যাশ",
+      "category": "বিদ্যুৎ ও জ্বালানি",
+      "createdAt": "2026-11-09T02:26:47.715Z",
+      "verified": true,
+      "date": "2026-11-09",
+      "id": "tx-wood-1794191207715",
+      "type": "OUT",
+      "amount": 6560,
+      "referenceId": "wood-1794191207715-cnkh",
+      "description": "জ্বালানি কাঠ ক্রয় (মিক্সড জ্বালানি কাঠ · ৫৪ মণ @ ৳140/মণ): জাকা কাঠ"
+    },
+    {
+      "category": "বিদ্যুৎ ও জ্বালানি",
+      "date": "2026-11-09",
+      "verified": true,
+      "createdAt": "2026-11-09T02:25:57.232Z",
+      "paymentMethod": "নগদ ক্যাশ",
+      "type": "OUT",
+      "amount": 13053,
+      "referenceId": "wood-1794191157232-jdd4",
+      "description": "জ্বালানি কাঠ ক্রয় (মিক্সড জ্বালানি কাঠ · ১৩৮.৫ মণ @ ৳150/মণ): মতিয়ার কাঠ",
+      "id": "tx-wood-1794191157232"
+    },
+    {
+      "amount": 109695,
+      "description": "জ্বালানি কাঠ ক্রয় (মিক্সড জ্বালানি কাঠ · ৮৭৯ মণ @ ৳160/মণ): হাফিজুল কাঠ",
+      "referenceId": "wood-1794191041910-7pbx",
+      "type": "OUT",
+      "id": "tx-wood-1794191041910",
+      "createdAt": "2026-11-09T02:24:01.910Z",
+      "paymentMethod": "নগদ ক্যাশ",
+      "date": "2026-11-09",
+      "category": "বিদ্যুৎ ও জ্বালানি",
+      "verified": true
+    },
+    {
+      "amount": 20848,
+      "type": "OUT",
+      "paymentMethod": "নগদ ক্যাশ",
+      "id": "tx-wood-1794190662694",
+      "referenceId": "wood-1794190662694-o7bb",
+      "description": "জ্বালানি কাঠ ক্রয় (মিক্সড জ্বালানি কাঠ · ১৬৬ মণ @ ৳138/মণ): বাবলু কাঠ",
+      "category": "বিদ্যুৎ ও জ্বালানি",
+      "date": "2026-11-09",
+      "verified": true,
+      "createdAt": "2026-11-09T02:17:42.695Z"
+    },
+    {
+      "id": "tx-1794190109445",
+      "amount": 63245,
+      "type": "OUT",
+      "createdAt": "2026-11-09T02:08:29.446Z",
+      "description": "চুল্লি ভ্যান লোড (৩,৬১,৪০০ পিস @ ৳175/হাজার): সেলিম সর্দার",
+      "referenceId": "load-1794190109445",
+      "date": "2026-11-09",
+      "verified": true,
+      "paymentMethod": "নগদ ক্যাশ",
+      "category": "শ্রমিক ও সর্দার পেমেন্ট"
+    },
+    {
+      "amount": 116500,
+      "createdAt": "2026-11-09T02:05:47.651Z",
+      "description": "শফিকুল মিল (পট-০3) - ১,৭০,৮০০ পিস কাঁচা ইট কাটা পেমেন্ট",
+      "referenceId": "pot-1794189947650",
+      "verified": true,
+      "category": "শ্রমিক ও সর্দার পেমেন্ট",
+      "type": "OUT",
+      "date": "2026-11-09",
+      "paymentMethod": "নগদ ক্যাশ",
+      "id": "tx-1794189947650"
+    },
+    {
+      "amount": 165800,
+      "type": "OUT",
+      "id": "tx-1794189902522",
+      "date": "2026-11-09",
+      "verified": true,
+      "createdAt": "2026-11-09T02:05:02.523Z",
+      "paymentMethod": "নগদ ক্যাশ",
+      "category": "শ্রমিক ও সর্দার পেমেন্ট",
+      "description": "মফিজুল মিল (পট-০2) - ২,৪৯,১০০ পিস কাঁচা ইট কাটা পেমেন্ট",
+      "referenceId": "pot-1794189902522"
+    },
+    {
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "description": "ওহাব মিল (পট-০2) - ১,৫৯,৩০০ পিস কাঁচা ইট কাটা পেমেন্ট",
+      "referenceId": "pot-1794189347483",
+      "amount": 116000,
+      "id": "tx-1794189347483",
+      "date": "2026-11-09",
+      "category": "শ্রমিক ও সর্দার পেমেন্ট",
+      "type": "OUT",
+      "createdAt": "2026-11-09T01:55:47.483Z"
+    },
+    {
+      "amount": 20000,
+      "paymentMethod": "নগদ ক্যাশ",
+      "type": "OUT",
+      "id": "tx-1794189262884",
+      "description": "ওহাব মিল (পট-০১) - ২,০০০ পিস কাঁচা ইট কাটা পেমেন্ট",
+      "referenceId": "pot-1794189262884",
+      "createdAt": "2026-11-09T01:54:22.885Z",
+      "verified": true,
+      "date": "2026-11-09",
+      "category": "শ্রমিক ও সর্দার পেমেন্ট"
+    },
+    {
+      "paymentMethod": "নগদ ক্যাশ",
+      "verified": true,
+      "type": "OUT",
+      "category": "শ্রমিক ও সর্দার পেমেন্ট",
+      "id": "tx-1794189048098",
+      "referenceId": "pot-1794189048098",
+      "description": "ওহাব মিল (পট-০১) - ১,০০,০০,০০০ পিস কাঁচা ইট কাটা পেমেন্ট",
+      "amount": 10000,
+      "createdAt": "2026-11-09T01:50:48.098Z",
+      "date": "2026-11-09"
+    }
+  ],
+  "workerProfiles": [],
+  "workerAttendance": [],
+  "kilnNotes": [],
+  "millPots": [
+    {
+      "date": "2026-11-09",
+      "note": "",
+      "createdAt": "2026-11-09T02:05:47.650Z",
+      "millNameBn": "শফিকুল মিল",
+      "ratePerThousand": 680,
+      "millId": "sofikul",
+      "takenToChulli": 0,
+      "millNameEn": "Sofikul Mill",
+      "rawBricksCut": 170800,
+      "potNo": "পট-০3",
+      "dueAmount": 0,
+      "remainingRawBricks": 170800,
+      "paidAmount": 116500,
+      "id": "pot-1794189947650",
+      "totalPayable": 116144
+    },
+    {
+      "paidAmount": 165800,
+      "takenToChulli": 0,
+      "createdAt": "2026-11-09T02:05:02.522Z",
+      "millNameEn": "Mofijul Mill",
+      "totalPayable": 169388,
+      "rawBricksCut": 249100,
+      "millNameBn": "মফিজুল মিল",
+      "id": "pot-1794189902522",
+      "dueAmount": 3588,
+      "ratePerThousand": 680,
+      "millId": "mofijul",
+      "note": "",
+      "date": "2026-11-09",
+      "potNo": "পট-০2",
+      "remainingRawBricks": 249100
+    },
+    {
+      "millNameEn": "Ohab Mill",
+      "millId": "ohab",
+      "paidAmount": 116000,
+      "createdAt": "2026-11-09T01:55:47.483Z",
+      "rawBricksCut": 159300,
+      "id": "pot-1794189347483",
+      "millNameBn": "ওহাব মিল",
+      "remainingRawBricks": 159300,
+      "ratePerThousand": 740,
+      "note": "",
+      "date": "2026-11-09",
+      "takenToChulli": 0,
+      "dueAmount": 1882,
+      "potNo": "পট-০2",
+      "totalPayable": 117882
+    }
+  ],
+  "chulliLoads": [
+    {
+      "paidAmount": 63245,
+      "rawBricksLoaded": 308200,
+      "totalBricksLoaded": 361400,
+      "vanCount": 3614,
+      "createdAt": "2026-11-09T02:08:29.445Z",
+      "totalBill": 63245,
+      "pakaBricksLoaded": 53200,
+      "id": "load-1794190109445",
+      "dueAmount": 0,
+      "note": "",
+      "date": "2026-11-09",
+      "sardarName": "সেলিম সর্দার",
+      "ratePerVan": 175
+    }
+  ],
+  "poraiMistriRecords": [],
+  "chulliUnloads": [],
+  "rubbishRecords": [],
+  "woodFuelRecords": [
+    {
+      "dueAmount": 0,
+      "unit": "মণ",
+      "date": "2026-11-09",
+      "note": "",
+      "id": "wood-1794207455753-ee77",
+      "quantity": 1610,
+      "woodType": "৩. লাকড়ি — চেরা লাকড়ি / ফাড়াই লাকড়ি",
+      "vehicleOrChallan": "",
+      "supplierName": "ওসমান সাতক্ষীরা তুষ",
+      "ratePerUnit": 540,
+      "paidAmount": 869400,
+      "createdAt": "2026-11-09T06:57:35.753Z",
+      "paymentMethod": "নগদ ক্যাশ",
+      "totalBill": 869400,
+      "supplierPhone": ""
+    },
+    {
+      "vehicleOrChallan": "",
+      "paidAmount": 525000,
+      "createdAt": "2026-11-09T06:55:26.603Z",
+      "ratePerUnit": 25000,
+      "supplierName": "যশোর নোয়াপাড়া",
+      "id": "wood-1794207326603-v0k0",
+      "totalBill": 525000,
+      "paymentMethod": "নগদ ক্যাশ",
+      "unit": "টন",
+      "note": "",
+      "date": "2026-11-09",
+      "dueAmount": 0,
+      "supplierPhone": "",
+      "quantity": 21,
+      "woodType": "২. কয়লা — ইন্দোনেশিয়ান / বড়পুকুরিয়া কয়লা"
+    },
+    {
+      "createdAt": "2026-11-09T02:37:13.814Z",
+      "totalBill": 72960,
+      "vehicleOrChallan": "",
+      "supplierName": "আনিস কাঠ",
+      "paymentMethod": "নগদ ক্যাশ",
+      "id": "wood-1794191833814-qlky",
+      "woodType": "মিক্সড জ্বালানি কাঠ",
+      "unit": "মণ",
+      "note": "",
+      "dueAmount": 3100,
+      "date": "2026-11-09",
+      "quantity": 456,
+      "ratePerUnit": 160,
+      "paidAmount": 69860,
+      "supplierPhone": ""
+    },
+    {
+      "supplierPhone": "",
+      "date": "2026-11-09",
+      "note": "",
+      "unit": "মণ",
+      "supplierName": "আরিজুল কাঠ",
+      "paidAmount": 31710,
+      "woodType": "মিক্সড জ্বালানি কাঠ",
+      "quantity": 121,
+      "dueAmount": 0,
+      "paymentMethod": "নগদ ক্যাশ",
+      "vehicleOrChallan": "",
+      "ratePerUnit": 140,
+      "id": "wood-1794191690957-hi0e",
+      "totalBill": 16940,
+      "createdAt": "2026-11-09T02:34:50.957Z"
+    },
+    {
+      "createdAt": "2026-11-09T02:26:47.715Z",
+      "id": "wood-1794191207715-cnkh",
+      "supplierPhone": "",
+      "quantity": 54,
+      "woodType": "মিক্সড জ্বালানি কাঠ",
+      "unit": "মণ",
+      "totalBill": 7560,
+      "date": "2026-11-09",
+      "note": "",
+      "paymentMethod": "নগদ ক্যাশ",
+      "paidAmount": 6560,
+      "supplierName": "জাকা কাঠ",
+      "dueAmount": 1000,
+      "vehicleOrChallan": "",
+      "ratePerUnit": 140
+    },
+    {
+      "woodType": "মিক্সড জ্বালানি কাঠ",
+      "totalBill": 20775,
+      "date": "2026-11-09",
+      "note": "",
+      "unit": "মণ",
+      "quantity": 138.5,
+      "id": "wood-1794191157232-jdd4",
+      "supplierPhone": "",
+      "supplierName": "মতিয়ার কাঠ",
+      "vehicleOrChallan": "",
+      "paymentMethod": "নগদ ক্যাশ",
+      "createdAt": "2026-11-09T02:25:57.232Z",
+      "ratePerUnit": 150,
+      "dueAmount": 7722,
+      "paidAmount": 13053
+    },
+    {
+      "vehicleOrChallan": "",
+      "totalBill": 140640,
+      "createdAt": "2026-11-09T02:24:01.910Z",
+      "ratePerUnit": 160,
+      "supplierName": "হাফিজুল কাঠ",
+      "unit": "মণ",
+      "note": "",
+      "date": "2026-11-09",
+      "paymentMethod": "নগদ ক্যাশ",
+      "paidAmount": 109695,
+      "id": "wood-1794191041910-7pbx",
+      "woodType": "মিক্সড জ্বালানি কাঠ",
+      "quantity": 879,
+      "supplierPhone": "",
+      "dueAmount": 30945
+    },
+    {
+      "totalBill": 22908,
+      "paymentMethod": "নগদ ক্যাশ",
+      "paidAmount": 20848,
+      "createdAt": "2026-11-09T02:17:42.694Z",
+      "supplierPhone": "",
+      "date": "2026-11-09",
+      "note": "",
+      "quantity": 166,
+      "unit": "মণ",
+      "woodType": "মিক্সড জ্বালানি কাঠ",
+      "id": "wood-1794190662694-o7bb",
+      "dueAmount": 2060,
+      "supplierName": "বাবলু কাঠ",
+      "ratePerUnit": 138,
+      "vehicleOrChallan": ""
+    }
+  ],
+  "soilCoalRecords": [],
+  "dadonRecords": [],
+  "advanceBookings": [],
+  "vehicleDieselRecords": [],
+  "complianceRecords": [],
+  "productionPayments": [
+    {
+      "section": "JALANI",
+      "cashTxId": "tx-wood-1794207455754",
+      "recipientName": "ওসমান সাতক্ষীরা তুষ (৩. লাকড়ি — চেরা লাকড়ি / ফাড়াই লাকড়ি)",
+      "subDetail": "১,৬১০ মণ @ ৳৫৪০/মণ",
+      "id": "ppay-wood-1794207455754-nzoi",
+      "createdAt": "2026-11-09T06:57:35.754Z",
+      "referenceId": "wood-1794207455753-ee77",
+      "amount": 869400,
+      "date": "2026-11-09",
+      "note": "কাঠ সরবরাহের সময় নগদ পেমেন্ট"
+    },
+    {
+      "createdAt": "2026-11-09T06:55:26.617Z",
+      "referenceId": "wood-1794207326603-v0k0",
+      "cashTxId": "tx-wood-1794207326603",
+      "section": "JALANI",
+      "id": "ppay-wood-1794207326603-fevg",
+      "recipientName": "যশোর নোয়াপাড়া (২. কয়লা — ইন্দোনেশিয়ান / বড়পুকুরিয়া কয়লা)",
+      "amount": 525000,
+      "subDetail": "২১ টন @ ৳২৫,০০০/টন",
+      "date": "2026-11-09",
+      "note": "কাঠ সরবরাহের সময় নগদ পেমেন্ট"
+    },
+    {
+      "date": "2026-11-09",
+      "note": "কাঠ সরবরাহের সময় নগদ পেমেন্ট",
+      "cashTxId": "tx-wood-1794191833814",
+      "amount": 69860,
+      "subDetail": "৪৫৬ মণ @ ৳১৬০/মণ",
+      "referenceId": "wood-1794191833814-qlky",
+      "createdAt": "2026-11-09T02:37:13.815Z",
+      "recipientName": "আনিস কাঠ (মিক্সড জ্বালানি কাঠ)",
+      "id": "ppay-wood-1794191833814-i5ar",
+      "section": "JALANI"
+    },
+    {
+      "note": "কাঠ সরবরাহের সময় নগদ পেমেন্ট",
+      "date": "2026-11-09",
+      "createdAt": "2026-11-09T02:34:50.957Z",
+      "amount": 31710,
+      "recipientName": "আরিজুল কাঠ (মিক্সড জ্বালানি কাঠ)",
+      "id": "ppay-wood-1794191690957-ujqh",
+      "referenceId": "wood-1794191690957-hi0e",
+      "cashTxId": "tx-wood-1794191690957",
+      "section": "JALANI",
+      "subDetail": "১২১ মণ @ ৳১৪০/মণ"
+    },
+    {
+      "subDetail": "৫৪ মণ @ ৳১৪০/মণ",
+      "id": "ppay-wood-1794191207715-nvke",
+      "recipientName": "জাকা কাঠ (মিক্সড জ্বালানি কাঠ)",
+      "cashTxId": "tx-wood-1794191207715",
+      "referenceId": "wood-1794191207715-cnkh",
+      "section": "JALANI",
+      "date": "2026-11-09",
+      "note": "কাঠ সরবরাহের সময় নগদ পেমেন্ট",
+      "amount": 6560,
+      "createdAt": "2026-11-09T02:26:47.715Z"
+    },
+    {
+      "amount": 13053,
+      "createdAt": "2026-11-09T02:25:57.232Z",
+      "recipientName": "মতিয়ার কাঠ (মিক্সড জ্বালানি কাঠ)",
+      "id": "ppay-wood-1794191157232-0p07",
+      "cashTxId": "tx-wood-1794191157232",
+      "note": "কাঠ সরবরাহের সময় নগদ পেমেন্ট",
+      "date": "2026-11-09",
+      "section": "JALANI",
+      "referenceId": "wood-1794191157232-jdd4",
+      "subDetail": "১৩৮.৫ মণ @ ৳১৫০/মণ"
+    },
+    {
+      "referenceId": "wood-1794191041910-7pbx",
+      "subDetail": "৮৭৯ মণ @ ৳১৬০/মণ",
+      "id": "ppay-wood-1794191041910-s8np",
+      "createdAt": "2026-11-09T02:24:01.910Z",
+      "section": "JALANI",
+      "amount": 109695,
+      "cashTxId": "tx-wood-1794191041910",
+      "recipientName": "হাফিজুল কাঠ (মিক্সড জ্বালানি কাঠ)",
+      "note": "কাঠ সরবরাহের সময় নগদ পেমেন্ট",
+      "date": "2026-11-09"
+    },
+    {
+      "subDetail": "১৬৬ মণ @ ৳১৩৮/মণ",
+      "date": "2026-11-09",
+      "note": "কাঠ সরবরাহের সময় নগদ পেমেন্ট",
+      "referenceId": "wood-1794190662694-o7bb",
+      "recipientName": "বাবলু কাঠ (মিক্সড জ্বালানি কাঠ)",
+      "section": "JALANI",
+      "amount": 20848,
+      "id": "ppay-wood-1794190662694-tmxa",
+      "cashTxId": "tx-wood-1794190662694",
+      "createdAt": "2026-11-09T02:17:42.694Z"
+    },
+    {
+      "id": "ppay-1794190109445-pscn",
+      "subDetail": "৩,৬১,৪০০ পিস ইট (কাঁচা ৩,০৮,২০০ + পাকা ৫৩,২০০ @ ৳১৭৫/হাজার)",
+      "cashTxId": "tx-1794190109445",
+      "amount": 63245,
+      "section": "VAN_LOAD",
+      "createdAt": "2026-11-09T02:08:29.446Z",
+      "date": "2026-11-09",
+      "note": "ভ্যান লোড এন্ট্রির সময় জমা",
+      "referenceId": "load-1794190109445",
+      "recipientName": "সেলিম সর্দার"
+    },
+    {
+      "referenceId": "pot-1794189947650",
+      "amount": 116500,
+      "section": "MILL",
+      "createdAt": "2026-11-09T02:05:47.651Z",
+      "id": "ppay-1794189947650-tqdt",
+      "recipientName": "শফিকুল মিল (পট-০3)",
+      "subDetail": "১,৭০,৮০০ পিস ইট @ ৳৬৮০/হাজার",
+      "date": "2026-11-09",
+      "note": "পট এন্ট্রির সময় প্রাথমিক জমা",
+      "cashTxId": "tx-1794189947650"
+    },
+    {
+      "recipientName": "মফিজুল মিল (পট-০2)",
+      "subDetail": "২,৪৯,১০০ পিস ইট @ ৳৬৮০/হাজার",
+      "date": "2026-11-09",
+      "note": "পট এন্ট্রির সময় প্রাথমিক জমা",
+      "cashTxId": "tx-1794189902522",
+      "createdAt": "2026-11-09T02:05:02.522Z",
+      "section": "MILL",
+      "referenceId": "pot-1794189902522",
+      "id": "ppay-1794189902522-rjm7",
+      "amount": 165800
+    },
+    {
+      "amount": 116000,
+      "cashTxId": "tx-1794189347483",
+      "referenceId": "pot-1794189347483",
+      "section": "MILL",
+      "recipientName": "ওহাব মিল (পট-০2)",
+      "subDetail": "১,৫৯,৩০০ পিস ইট @ ৳৭৪০/হাজার",
+      "note": "পট এন্ট্রির সময় প্রাথমিক জমা",
+      "date": "2026-11-09",
+      "createdAt": "2026-11-09T01:55:47.483Z",
+      "id": "ppay-1794189347483-8srj"
+    }
+  ],
+  "memoDeliveries": [],
+  "kilnUnits": [
+    {
+      "nameEn": "SBL Sweet Clay Bricks — Kiln-1 (Babulia, Satkhira)",
+      "locationBn": "বাবুলিয়া, সাতক্ষীরা সদর, সাতক্ষীরা",
+      "nameBn": "SBL মিষ্টি মাটির ইট — ভাটা-১ (বাবুলিয়া, সাতক্ষীরা)",
+      "id": "sbl-1",
+      "active": true
+    },
+    {
+      "active": true,
+      "locationBn": "সাতক্ষীরা সদর, সাতক্ষীরা",
+      "nameEn": "SBL Sweet Clay Bricks — Kiln-2 (Satkhira)",
+      "id": "sbl-2",
+      "nameBn": "SBL মিষ্টি মাটির ইট — ভাটা-২ (সাতক্ষীরা)"
+    }
+  ],
+  "kilnSeasons": [
+    {
+      "status": "ACTIVE",
+      "nameEn": "2026–2027 Season",
+      "revisionHistory": [
+        {
+          "action": "CREATED",
+          "timestamp": "2026-10-01T08:00:00.000Z",
+          "id": "rev-init-2026",
+          "actorName": "মোঃ কামরুল ইসলাম সাহেব",
+          "reasonBn": "২০২৬–২০২৭ ভাটা সিজন প্রারম্ভিক কনফিগারেশন।"
+        }
+      ],
+      "createdAt": "2026-10-01T08:00:00.000Z",
+      "damageOrAdjustmentBricks": 0,
+      "nameBn": "সিজন ২০২৬–২০২৭ (চলমান ভাটা সিজন)",
+      "startDate": "2026-10-01",
+      "endDate": "2027-06-30",
+      "kilnIds": [
+        "sbl-1",
+        "sbl-2"
+      ],
+      "id": "season-2026-2027"
+    },
+    {
+      "revisionHistory": [
+        {
+          "timestamp": "2025-10-01T08:00:00.000Z",
+          "reasonBn": "২০২৫–২০২৬ ভাটা সিজন রেকর্ড সংরক্ষণ।",
+          "id": "rev-init-2025",
+          "actorName": "মোঃ কামরুল ইসলাম সাহেব",
+          "action": "CREATED"
+        }
+      ],
+      "startDate": "2025-10-01",
+      "damageOrAdjustmentBricks": 0,
+      "nameEn": "2025–2026 Season",
+      "status": "ACTIVE",
+      "kilnIds": [
+        "sbl-1"
+      ],
+      "endDate": "2026-06-30",
+      "createdAt": "2025-10-01T08:00:00.000Z",
+      "id": "season-2025-2026",
+      "nameBn": "সিজন ২০২৫–২০২৬ (পূর্ববর্তী ভাটা সিজন)"
+    }
+  ],
+  "agentTasks": [],
+  "agentMessages": [
+    {
+      "text": "আসসালামু আলাইকুম! BrickFlow — Bhata Management System প্রস্তুত। সকল হিসাব ০ (শূন্য) থেকে শুরু করা হয়েছে।",
+      "timestamp": "2026-11-09T08:00:00.000Z",
+      "role": "assistant",
+      "id": "msg-welcome"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "audit-1794236373404-134u",
+      "timestamp": "2026-11-09T14:59:33.404Z",
+      "actor": "USER",
+      "action": "ADD_CASH_TX",
+      "detailsBn": "মাটি ও জমি লিজ পরিশোধ: ৳৩০,০০০ (খরচ) যোগ।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1794234095945-j0fv",
+      "actor": "USER",
+      "action": "DADON_LEDGER",
+      "detailsBn": "দাদন খাতা এন্ট্রি: ওহাব মিল সর্দার (মিল সর্দার) — দাদন ৳৬৮,৯০,০০০, কাজের বিল সমন্বয় ৳০",
+      "timestamp": "2026-11-09T14:21:35.945Z",
+      "status": "SUCCESS"
+    },
+    {
+      "detailsBn": "মেমো 3258 তৈরি: বাকিবুল্লাহ, মোট ৳১,২০,০০০, জমা ৳১,২০,০০০, বাকি ৳০।",
+      "timestamp": "2026-11-09T07:12:07.378Z",
+      "actor": "USER",
+      "status": "SUCCESS",
+      "action": "CREATE_SALES_MEMO",
+      "id": "audit-1794208327378-gqr9"
+    },
+    {
+      "status": "SUCCESS",
+      "actor": "USER",
+      "action": "DADON_LEDGER",
+      "id": "audit-1794207771779-qwf6",
+      "timestamp": "2026-11-09T07:02:51.779Z",
+      "detailsBn": "দাদন খাতা এন্ট্রি: মফিজুল মিল সর্দার (মিল সর্দার) — দাদন ৳৬,৮০,০০০, কাজের বিল সমন্বয় ৳০"
+    },
+    {
+      "timestamp": "2026-11-09T07:01:20.087Z",
+      "detailsBn": "দাদন খাতা এন্ট্রি: মফিজুল মিল সর্দার (মিল সর্দার) — দাদন ৳৬,৮০,০০০, কাজের বিল সমন্বয় ৳০",
+      "actor": "USER",
+      "status": "SUCCESS",
+      "id": "audit-1794207680087-8f04",
+      "action": "DADON_LEDGER"
+    },
+    {
+      "timestamp": "2026-11-09T06:57:35.754Z",
+      "detailsBn": "জ্বালানি কাঠ জমা (ওসমান সাতক্ষীরা তুষ): ১,৬১০ মণ (@ ৳540/মণ) — মোট বিল ৳৮,৬৯,৪০০, জমা ৳৮,৬৯,৪০০, বকেয়া ৳০",
+      "actor": "USER",
+      "action": "WOOD_FUEL_ADD",
+      "status": "SUCCESS",
+      "id": "audit-1794207455754-d51y"
+    },
+    {
+      "timestamp": "2026-11-09T06:55:26.617Z",
+      "detailsBn": "জ্বালানি কাঠ জমা (যশোর নোয়াপাড়া): ২১ টন (@ ৳25000/টন) — মোট বিল ৳৫,২৫,০০০, জমা ৳৫,২৫,০০০, বকেয়া ৳০",
+      "actor": "USER",
+      "status": "SUCCESS",
+      "id": "audit-1794207326617-27g6",
+      "action": "WOOD_FUEL_ADD"
+    },
+    {
+      "actor": "USER",
+      "detailsBn": "JSON ব্যাকআপ / ফোনের লোকাল ভল্ট থেকে সফলভাবে রিস্টোর করা হয়েছে।",
+      "timestamp": "2026-11-09T06:53:25.148Z",
+      "id": "audit-1794207205148-krb6",
+      "action": "RESTORE_BACKUP",
+      "status": "SUCCESS"
+    },
+    {
+      "status": "SUCCESS",
+      "timestamp": "2026-11-09T02:37:13.815Z",
+      "detailsBn": "জ্বালানি কাঠ জমা (আনিস কাঠ): ৪৫৬ মণ (@ ৳160/মণ) — মোট বিল ৳৭২,৯৬০, জমা ৳৬৯,৮৬০, বকেয়া ৳৩,১০০",
+      "id": "audit-1794191833815-wyf3",
+      "action": "WOOD_FUEL_ADD",
+      "actor": "USER"
+    },
+    {
+      "timestamp": "2026-11-09T02:34:50.957Z",
+      "detailsBn": "জ্বালানি কাঠ জমা (আরিজুল কাঠ): ১২১ মণ (@ ৳140/মণ) — মোট বিল ৳১৬,৯৪০, জমা ৳৩১,৭১০, বকেয়া ৳০",
+      "actor": "USER",
+      "id": "audit-1794191690957-j6ox",
+      "action": "WOOD_FUEL_ADD",
+      "status": "SUCCESS"
+    },
+    {
+      "action": "WOOD_FUEL_ADD",
+      "id": "audit-1794191207715-a2k3",
+      "status": "SUCCESS",
+      "actor": "USER",
+      "detailsBn": "জ্বালানি কাঠ জমা (জাকা কাঠ): ৫৪ মণ (@ ৳140/মণ) — মোট বিল ৳৭,৫৬০, জমা ৳৬,৫৬০, বকেয়া ৳১,০০০",
+      "timestamp": "2026-11-09T02:26:47.715Z"
+    },
+    {
+      "status": "SUCCESS",
+      "action": "WOOD_FUEL_ADD",
+      "actor": "USER",
+      "timestamp": "2026-11-09T02:25:57.232Z",
+      "detailsBn": "জ্বালানি কাঠ জমা (মতিয়ার কাঠ): ১৩৮.৫ মণ (@ ৳150/মণ) — মোট বিল ৳২০,৭৭৫, জমা ৳১৩,০৫৩, বকেয়া ৳৭,৭২২",
+      "id": "audit-1794191157232-bsjn"
+    },
+    {
+      "detailsBn": "জ্বালানি কাঠ জমা (হাফিজুল কাঠ): ৮৭৯ মণ (@ ৳160/মণ) — মোট বিল ৳১,৪০,৬৪০, জমা ৳১,০৯,৬৯৫, বকেয়া ৳৩০,৯৪৫",
+      "timestamp": "2026-11-09T02:24:01.910Z",
+      "status": "SUCCESS",
+      "action": "WOOD_FUEL_ADD",
+      "id": "audit-1794191041910-11t6",
+      "actor": "USER"
+    },
+    {
+      "actor": "USER",
+      "detailsBn": "জ্বালানি কাঠ জমা (বাবলু কাঠ): ১৬৬ মণ (@ ৳138/মণ) — মোট বিল ৳২২,৯০৮, জমা ৳২০,৮৪৮, বকেয়া ৳২,০৬০",
+      "timestamp": "2026-11-09T02:17:42.695Z",
+      "status": "SUCCESS",
+      "action": "WOOD_FUEL_ADD",
+      "id": "audit-1794190662695-rx99"
+    },
+    {
+      "id": "audit-1794190278010-i9a9",
+      "actor": "USER",
+      "action": "CHULLI_VAN_LOAD",
+      "detailsBn": "চুল্লিতে ভ্যান লোড (সেলিম সর্দার): মোট ৩,৬১,৪০০ পিস [কাঁচা: ৩,০৮,২০০, পাকা: ৫৩,২০০] (@ ৳115/হাজার) - বিল ৳৪১,৫৬১",
+      "timestamp": "2026-11-09T02:11:18.010Z",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1794190109446-r7lm",
+      "actor": "USER",
+      "timestamp": "2026-11-09T02:08:29.446Z",
+      "detailsBn": "চুল্লিতে ভ্যান লোড (সেলিম সর্দার): মোট ৩,৬১,৪০০ পিস [কাঁচা: ৩,০৮,২০০, পাকা: ৫৩,২০০] (@ ৳175/হাজার) - বিল ৳৬৩,২৪৫",
+      "status": "SUCCESS",
+      "action": "CHULLI_VAN_LOAD"
+    },
+    {
+      "id": "audit-1794189947651-zptz",
+      "actor": "USER",
+      "detailsBn": "শফিকুল মিল (পট-০3): ১,৭০,৮০০ পিস কাঁচা ইট যোগ।",
+      "timestamp": "2026-11-09T02:05:47.651Z",
+      "status": "SUCCESS",
+      "action": "ADD_MILL_POT"
+    },
+    {
+      "id": "audit-1794189902523-7vrr",
+      "action": "ADD_MILL_POT",
+      "status": "SUCCESS",
+      "actor": "USER",
+      "detailsBn": "মফিজুল মিল (পট-০2): ২,৪৯,১০০ পিস কাঁচা ইট যোগ।",
+      "timestamp": "2026-11-09T02:05:02.523Z"
+    },
+    {
+      "timestamp": "2026-11-09T01:55:47.483Z",
+      "id": "audit-1794189347483-jwu2",
+      "detailsBn": "ওহাব মিল (পট-০2): ১,৫৯,৩০০ পিস কাঁচা ইট যোগ।",
+      "actor": "USER",
+      "action": "ADD_MILL_POT",
+      "status": "SUCCESS"
+    },
+    {
+      "action": "ADD_MILL_POT",
+      "status": "SUCCESS",
+      "actor": "USER",
+      "id": "audit-1794189262885-eanm",
+      "timestamp": "2026-11-09T01:54:22.885Z",
+      "detailsBn": "ওহাব মিল (পট-০১): ২,০০০ পিস কাঁচা ইট যোগ।"
+    },
+    {
+      "status": "SUCCESS",
+      "action": "ADD_MILL_POT",
+      "actor": "USER",
+      "timestamp": "2026-11-09T01:50:48.098Z",
+      "detailsBn": "ওহাব মিল (পট-০১): ১,০০,০০,০০০ পিস কাঁচা ইট যোগ।",
+      "id": "audit-1794189048098-jjxy"
+    },
+    {
+      "id": "audit-1794189000200-6rwp",
+      "action": "RESET_ALL_DATA",
+      "detailsBn": "সম্পূর্ণ ডাটাবেস রিসেট করে সকল হিসাব ০ (শূন্য) করা হয়েছে।",
+      "timestamp": "2026-11-09T01:50:00.200Z",
+      "status": "SUCCESS",
+      "actor": "USER"
+    },
+    {
+      "id": "audit-1",
+      "status": "SUCCESS",
+      "action": "SYSTEM_INIT",
+      "actor": "SYSTEM_QA",
+      "timestamp": "2026-11-09T08:00:00.000Z",
+      "detailsBn": "BrickFlow ম্যানেজমেন্ট সিস্টেম সকল হিসাব ০ (শূন্য) করে প্রস্তুত করা হয়েছে।"
+    }
+  ],
+  "context": {},
+  "__sblFullBackupVersion": 2,
+  "dismissedAlertIds": [],
+  "firingRounds": [],
+  "enterpriseState": {
+    "staffSalaries": [],
+    "activeRoundNo": 1,
+    "roundStartDate": "2026-11-09",
+    "ownerPin": "1234",
+    "landLeases": [],
+    "wastageRecords": [],
+    "lineSystem": {
+      "coalUsedTons": 0,
+      "startDirectionBn": "লাইন #132 থেকে আগুন, লোড ও আনলোড শুরু",
+      "dampers": [
+        {
+          "note": "লাইন #৫ এর পর ১ম ৫ লাইনের ডাম্পার",
+          "linesInBlock": 5,
+          "sardarName": "সেলিম সর্দার",
+          "hasProtectiveGap": true,
+          "status": "ACTIVE_CLOSED",
+          "id": "dmp-1",
+          "afterLineNo": 5
+        },
+        {
+          "id": "dmp-2",
+          "afterLineNo": 12,
+          "status": "ACTIVE_CLOSED",
+          "hasProtectiveGap": true,
+          "linesInBlock": 7,
+          "note": "৭ লাইনের ডাম্পার ও গ্যাপ",
+          "sardarName": "সেলিম সর্দার"
+        }
+      ],
+      "firedLinesCompleted": 0,
+      "fireStartLineNo": 132,
+      "firemanMistriName": "আলতাফ সর্দার (পোড়াই মিস্ত্রি সর্দার)",
+      "lineOverrides": {},
+      "totalLines": 208,
+      "minSafeLoadAheadLines": 12,
+      "expectedLinesPerDay": 3.5,
+      "bricksPerLine": 4000,
+      "unloadedLinesBehind": 0,
+      "woodUsedMaunds": 0,
+      "loadSardarName": "সেলিম সর্দার (ভ্যান লোড সর্দার)",
+      "rawLinesLoadedAhead": 89,
+      "firingDaysElapsed": 0,
+      "activeFiringLinesCount": 1
+    },
+    "chambers": [
+      {
+        "temperatureC": 30,
+        "chamberNo": 1,
+        "updatedDate": "2026-11-09",
+        "coalUsedKg": 0,
+        "sardarOrMistri": "প্রস্তুত",
+        "bricksCapacity": 0,
+        "status": "EMPTY"
+      },
+      {
+        "sardarOrMistri": "প্রস্তুত",
+        "updatedDate": "2026-11-09",
+        "chamberNo": 2,
+        "temperatureC": 30,
+        "coalUsedKg": 0,
+        "status": "EMPTY",
+        "bricksCapacity": 0
+      },
+      {
+        "sardarOrMistri": "প্রস্তুত",
+        "status": "EMPTY",
+        "coalUsedKg": 0,
+        "updatedDate": "2026-11-09",
+        "chamberNo": 3,
+        "bricksCapacity": 0,
+        "temperatureC": 30
+      },
+      {
+        "bricksCapacity": 0,
+        "chamberNo": 4,
+        "temperatureC": 30,
+        "updatedDate": "2026-11-09",
+        "status": "EMPTY",
+        "coalUsedKg": 0,
+        "sardarOrMistri": "প্রস্তুত"
+      },
+      {
+        "chamberNo": 5,
+        "sardarOrMistri": "প্রস্তুত",
+        "status": "EMPTY",
+        "updatedDate": "2026-11-09",
+        "coalUsedKg": 0,
+        "temperatureC": 30,
+        "bricksCapacity": 0
+      },
+      {
+        "updatedDate": "2026-11-09",
+        "bricksCapacity": 0,
+        "coalUsedKg": 0,
+        "temperatureC": 30,
+        "chamberNo": 6,
+        "status": "EMPTY",
+        "sardarOrMistri": "প্রস্তুত"
+      },
+      {
+        "bricksCapacity": 0,
+        "sardarOrMistri": "প্রস্তুত",
+        "coalUsedKg": 0,
+        "updatedDate": "2026-11-09",
+        "chamberNo": 7,
+        "status": "EMPTY",
+        "temperatureC": 30
+      },
+      {
+        "sardarOrMistri": "প্রস্তুত",
+        "updatedDate": "2026-11-09",
+        "coalUsedKg": 0,
+        "chamberNo": 8,
+        "status": "EMPTY",
+        "bricksCapacity": 0,
+        "temperatureC": 30
+      },
+      {
+        "chamberNo": 9,
+        "temperatureC": 30,
+        "sardarOrMistri": "প্রস্তুত",
+        "coalUsedKg": 0,
+        "bricksCapacity": 0,
+        "status": "EMPTY",
+        "updatedDate": "2026-11-09"
+      },
+      {
+        "temperatureC": 30,
+        "updatedDate": "2026-11-09",
+        "sardarOrMistri": "প্রস্তুত",
+        "chamberNo": 10,
+        "coalUsedKg": 0,
+        "status": "EMPTY",
+        "bricksCapacity": 0
+      },
+      {
+        "status": "EMPTY",
+        "sardarOrMistri": "প্রস্তুত",
+        "temperatureC": 30,
+        "chamberNo": 11,
+        "bricksCapacity": 0,
+        "coalUsedKg": 0,
+        "updatedDate": "2026-11-09"
+      },
+      {
+        "temperatureC": 30,
+        "sardarOrMistri": "প্রস্তুত",
+        "coalUsedKg": 0,
+        "updatedDate": "2026-11-09",
+        "status": "EMPTY",
+        "chamberNo": 12,
+        "bricksCapacity": 0
+      },
+      {
+        "coalUsedKg": 0,
+        "updatedDate": "2026-11-09",
+        "bricksCapacity": 0,
+        "chamberNo": 13,
+        "status": "EMPTY",
+        "sardarOrMistri": "প্রস্তুত",
+        "temperatureC": 30
+      },
+      {
+        "sardarOrMistri": "প্রস্তুত",
+        "status": "EMPTY",
+        "chamberNo": 14,
+        "updatedDate": "2026-11-09",
+        "bricksCapacity": 0,
+        "coalUsedKg": 0,
+        "temperatureC": 30
+      },
+      {
+        "coalUsedKg": 0,
+        "chamberNo": 15,
+        "sardarOrMistri": "প্রস্তুত",
+        "updatedDate": "2026-11-09",
+        "bricksCapacity": 0,
+        "status": "EMPTY",
+        "temperatureC": 30
+      },
+      {
+        "chamberNo": 16,
+        "temperatureC": 30,
+        "sardarOrMistri": "প্রস্তুত",
+        "updatedDate": "2026-11-09",
+        "bricksCapacity": 0,
+        "status": "EMPTY",
+        "coalUsedKg": 0
+      },
+      {
+        "bricksCapacity": 0,
+        "updatedDate": "2026-11-09",
+        "temperatureC": 30,
+        "chamberNo": 17,
+        "status": "EMPTY",
+        "coalUsedKg": 0,
+        "sardarOrMistri": "প্রস্তুত"
+      },
+      {
+        "bricksCapacity": 0,
+        "status": "EMPTY",
+        "coalUsedKg": 0,
+        "updatedDate": "2026-11-09",
+        "chamberNo": 18,
+        "temperatureC": 30,
+        "sardarOrMistri": "প্রস্তুত"
+      },
+      {
+        "sardarOrMistri": "প্রস্তুত",
+        "temperatureC": 30,
+        "chamberNo": 19,
+        "coalUsedKg": 0,
+        "status": "EMPTY",
+        "bricksCapacity": 0,
+        "updatedDate": "2026-11-09"
+      },
+      {
+        "bricksCapacity": 0,
+        "temperatureC": 30,
+        "coalUsedKg": 0,
+        "chamberNo": 20,
+        "status": "EMPTY",
+        "updatedDate": "2026-11-09",
+        "sardarOrMistri": "প্রস্তুত"
+      },
+      {
+        "sardarOrMistri": "প্রস্তুত",
+        "status": "EMPTY",
+        "temperatureC": 30,
+        "chamberNo": 21,
+        "coalUsedKg": 0,
+        "updatedDate": "2026-11-09",
+        "bricksCapacity": 0
+      },
+      {
+        "updatedDate": "2026-11-09",
+        "chamberNo": 22,
+        "temperatureC": 30,
+        "bricksCapacity": 0,
+        "sardarOrMistri": "প্রস্তুত",
+        "status": "EMPTY",
+        "coalUsedKg": 0
+      },
+      {
+        "chamberNo": 23,
+        "coalUsedKg": 0,
+        "status": "EMPTY",
+        "bricksCapacity": 0,
+        "updatedDate": "2026-11-09",
+        "temperatureC": 30,
+        "sardarOrMistri": "প্রস্তুত"
+      },
+      {
+        "updatedDate": "2026-11-09",
+        "bricksCapacity": 0,
+        "coalUsedKg": 0,
+        "chamberNo": 24,
+        "sardarOrMistri": "প্রস্তুত",
+        "status": "EMPTY",
+        "temperatureC": 30
+      }
+    ]
+  },
+  "__exportedAt": "2026-11-09T02:37:50.065Z"
+}

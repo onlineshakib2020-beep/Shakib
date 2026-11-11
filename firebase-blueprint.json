@@ -1,0 +1,70 @@
+{
+  "entities": {
+    "KilnCloudState": {
+      "title": "KilnCloudState",
+      "description": "Full persistent cloud document for SBL Brick Kiln ERP state",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Fixed document identifier (e.g. main)"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update"
+        },
+        "salesMemos": {
+          "type": "string",
+          "description": "JSON serialized sales memos records array"
+        },
+        "cashTransactions": {
+          "type": "string",
+          "description": "JSON serialized cash transactions array"
+        },
+        "millPots": {
+          "type": "string",
+          "description": "JSON serialized mill pots array"
+        },
+        "chulliLoads": {
+          "type": "string",
+          "description": "JSON serialized chulli loads array"
+        },
+        "chulliUnloads": {
+          "type": "string",
+          "description": "JSON serialized chulli unloads array"
+        },
+        "poraiMistriRecords": {
+          "type": "string",
+          "description": "JSON serialized porai mistri array"
+        },
+        "woodFuelRecords": {
+          "type": "string",
+          "description": "JSON serialized wood fuel array"
+        },
+        "soilCoalRecords": {
+          "type": "string",
+          "description": "JSON serialized soil and coal array"
+        },
+        "dadonRecords": {
+          "type": "string",
+          "description": "JSON serialized dadon advance array"
+        },
+        "memoDeliveries": {
+          "type": "string",
+          "description": "JSON serialized deliveries array"
+        },
+        "fullStateJson": {
+          "type": "string",
+          "description": "Complete consolidated JSON state payload"
+        }
+      },
+      "required": ["id", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/kiln_data/{docId}": {
+      "schema": "KilnCloudState",
+      "description": "Stores real-time synchronized ERP database state for the brick kiln"
+    }
+  }
+}

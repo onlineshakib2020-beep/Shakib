@@ -1,0 +1,201 @@
+{
+  "settings": {
+    "bhataName": "BrickFlow — Bhata Management System",
+    "tagline": "ইটভাটার আধুনিক ডিজিটাল সেলস ও সার্বিক হিসাব ব্যবস্থাপনা",
+    "proprietorName": "মোঃ কামরুল ইসলাম সাহেব",
+    "phone1": "০১৯১৩-৬৭৮০১০",
+    "phone2": "০১৭২৮-২৮৭০১৮",
+    "address": "বাবুলিয়া, সাতক্ষীরা সদর, সাতক্ষীরা",
+    "openingBalance": 0,
+    "theme": "light"
+  },
+  "brickGrades": [
+    {
+      "id": "grade-1",
+      "code": "BF-1",
+      "nameBn": "১ নং ইট",
+      "nameEn": "1 No Brick",
+      "ratePerUnit": 11000,
+      "ratePerThousand": true,
+      "currentStock": 2000,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-1-5",
+      "code": "BF-1.5",
+      "nameBn": "১.৫ নং ইট",
+      "nameEn": "1.5 No Brick",
+      "ratePerUnit": 10500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-2",
+      "code": "BF-2",
+      "nameBn": "২ নং ইট",
+      "nameEn": "2 No Brick",
+      "ratePerUnit": 9500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-3",
+      "code": "BF-3",
+      "nameBn": "৩ নং ইট",
+      "nameEn": "3 No Brick",
+      "ratePerUnit": 8500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-picket",
+      "code": "BF-PKT",
+      "nameBn": "পিকেট ইট",
+      "nameEn": "Picket Brick",
+      "ratePerUnit": 10000,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    },
+    {
+      "id": "grade-goria",
+      "code": "BF-GOR",
+      "nameBn": "গড়িয়া ও ঝামা ইট",
+      "nameEn": "Goria Brick",
+      "ratePerUnit": 7500,
+      "ratePerThousand": true,
+      "currentStock": 0,
+      "seasonProduced": 0
+    }
+  ],
+  "salesMemos": [],
+  "cashTransactions": [],
+  "workerProfiles": [
+    {
+      "id": "w-1",
+      "name": "আব্দুর রহিম সর্দার",
+      "role": "সর্দার (Sardar)",
+      "phone": "০১৭১৪-৯০৮০৭০",
+      "morningRate": 250,
+      "afternoonRate": 250,
+      "active": true,
+      "totalEarnedSeason": 0,
+      "totalPaidSeason": 0
+    },
+    {
+      "id": "w-2",
+      "name": "মোঃ মিলন গাজী",
+      "role": "ভাটা লোড ও আনলোড (Loader)",
+      "phone": "০১৯২২-৩৩৪৪৫৫",
+      "morningRate": 125,
+      "afternoonRate": 125,
+      "active": true,
+      "totalEarnedSeason": 0,
+      "totalPaidSeason": 0
+    },
+    {
+      "id": "w-3",
+      "name": "আলী হোসেন (আগুন মিস্ত্রি)",
+      "role": "আগুন মিস্ত্রি (Fireman)",
+      "phone": "০১৭৩৩-৬৬৭৭৮৮",
+      "morningRate": 200,
+      "afternoonRate": 200,
+      "active": true,
+      "totalEarnedSeason": 0,
+      "totalPaidSeason": 0
+    },
+    {
+      "id": "w-4",
+      "name": "শহিদুল ইসলাম",
+      "role": "কাঁচা ইট কাটা (Moulder)",
+      "phone": "০১৮৪৪-১১২২৩৩",
+      "morningRate": 125,
+      "afternoonRate": 125,
+      "active": true,
+      "totalEarnedSeason": 0,
+      "totalPaidSeason": 0
+    },
+    {
+      "id": "w-5",
+      "name": "করিম বক্স (দিনমজুর)",
+      "role": "দিনমজুর (Daily Labour)",
+      "phone": "০১৯৫৫-৭৭৮৮৯৯",
+      "morningRate": 125,
+      "afternoonRate": 125,
+      "active": true,
+      "totalEarnedSeason": 0,
+      "totalPaidSeason": 0
+    }
+  ],
+  "workerAttendance": [],
+  "kilnNotes": [],
+  "millPots": [],
+  "chulliLoads": [],
+  "poraiMistriRecords": [],
+  "chulliUnloads": [],
+  "productionPayments": [],
+  "agentTasks": [],
+  "agentMessages": [],
+  "auditLogs": [
+    {
+      "id": "audit-1792943231452-127f",
+      "timestamp": "2026-10-25T15:47:11.452Z",
+      "actor": "USER",
+      "action": "DELETE_MEMO",
+      "detailsBn": "মেমো 3001 মুছে ফেলা হয়েছে ও স্টক ফেরত দেওয়া হয়েছে।",
+      "status": "WARNING"
+    },
+    {
+      "id": "audit-1792943149645-vimb",
+      "timestamp": "2026-10-25T15:45:49.645Z",
+      "actor": "USER",
+      "action": "DELETE_MEMO",
+      "detailsBn": "মেমো 3002 মুছে ফেলা হয়েছে ও স্টক ফেরত দেওয়া হয়েছে।",
+      "status": "WARNING"
+    },
+    {
+      "id": "audit-1792943148521-8y1j",
+      "timestamp": "2026-10-25T15:45:48.521Z",
+      "actor": "USER",
+      "action": "COLLECT_DUE",
+      "detailsBn": "মেমো 3002 (হাজী রফিকুল ইসলাম) থেকে ৳২,০০০ বকেয়া আদায়।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1792943146909-5dft",
+      "timestamp": "2026-10-25T15:45:46.909Z",
+      "actor": "USER",
+      "action": "CREATE_SALES_MEMO",
+      "detailsBn": "মেমো 3002 তৈরি: হাজী রফিকুল ইসলাম, মোট ৳১১,০০০, জমা ৳৫,০০০, বাকি ৳৬,০০০।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1792943068668-n5qm",
+      "timestamp": "2026-10-25T15:44:28.668Z",
+      "actor": "USER",
+      "action": "CREATE_SALES_MEMO",
+      "detailsBn": "মেমো 3001 তৈরি: হাজী রফিকুল ইসলাম, মোট ৳১১,০০০, জমা ৳৫,০০০, বাকি ৳৬,০০০।",
+      "status": "SUCCESS"
+    },
+    {
+      "id": "audit-1792936272974-8nqg",
+      "timestamp": "2026-10-25T13:51:12.974Z",
+      "actor": "USER",
+      "action": "DELETE_MEMO",
+      "detailsBn": "মেমো BF-2026-126 মুছে ফেলা হয়েছে ও স্টক ফেরত দেওয়া হয়েছে।",
+      "status": "WARNING"
+    },
+    {
+      "id": "audit-1792936266056-n7lk",
+      "timestamp": "2026-10-25T13:51:06.056Z",
+      "actor": "USER",
+      "action": "CREATE_SALES_MEMO",
+      "detailsBn": "মেমো BF-2026-126 তৈরি: হাজী আব্দুর রহিম, মোট ৳১১,০০০, জমা ৳১১,০০০, বাকি ৳০।",
+      "status": "SUCCESS"
+    }
+  ],
+  "context": {}
+}
